@@ -155,12 +155,12 @@ img { max-width: 100%; }
 
 .nav-group-label {
   display: block;
-  font-size: 10px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: .08em;
-  color: #475569;
-  padding: 8px 20px 4px;
+  color: #fff;
+  padding: 10px 20px 6px;
   white-space: nowrap;
 }
 
