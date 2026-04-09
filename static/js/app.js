@@ -1,6 +1,6 @@
-'use strict';
+﻿'use strict';
 /* ============================================================
-   AUDITORIA TELECOM — Single Page Application
+   AUDITORIA TELECOM â€” Single Page Application
    ============================================================ */
 
 // -------------------------------------------------------
@@ -11,12 +11,12 @@ const PAGE_TITLES = {
   cadastro:       'Cadastro de Linhas',
   contratos:      'Base de Contratos',
   'upload-contas':'Upload de Contas',
-  'fatura-xls':   'Fatura — Importar & Comparar',
+  'fatura-xls':   'Fatura â€” Importar & Comparar',
   coopernac:      'Coopernac',
-  comparacoes:    'Conferência',
-  historico:      'Histórico de Importações',
-  relatorios:     'Relatórios e Exportação',
-  configuracoes:  'Configurações',
+  comparacoes:    'ConferÃªncia',
+  historico:      'HistÃ³rico de ImportaÃ§Ãµes',
+  relatorios:     'RelatÃ³rios e ExportaÃ§Ã£o',
+  configuracoes:  'ConfiguraÃ§Ãµes',
 };
 
 const STATUS_LABELS = {
@@ -25,7 +25,7 @@ const STATUS_LABELS = {
   divergente:   'Divergente',
   sem_contrato: 'Sem Contrato',
   sem_fatura:   'Sem Fatura',
-  ambiguo:      'Ambíguo',
+  ambiguo:      'AmbÃ­guo',
 };
 
 const STATUS_ICONS = {
@@ -99,19 +99,19 @@ const API = {
 // -------------------------------------------------------
 const U = {
   money(v) {
-    if (v === null || v === undefined || v === '') return '—';
+    if (v === null || v === undefined || v === '') return 'â€”';
     return Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   },
   num2(v) {
-    if (v === null || v === undefined) return '—';
+    if (v === null || v === undefined) return 'â€”';
     return Number(v).toFixed(2).replace('.', ',');
   },
   pct(v) {
-    if (v === null || v === undefined) return '—';
+    if (v === null || v === undefined) return 'â€”';
     return `${Number(v).toFixed(1)}%`;
   },
   phone(v) {
-    if (!v) return '—';
+    if (!v) return 'â€”';
     const d = String(v).replace(/\D/g, '');
     if (d.length === 13) return `+${d.slice(0,2)} (${d.slice(2,4)}) ${d.slice(4,9)}-${d.slice(9)}`;
     if (d.length === 11) return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
@@ -128,7 +128,7 @@ const U = {
     return 'val-zero';
   },
   statusBadge(s) {
-    const label = STATUS_LABELS[s] || s || '—';
+    const label = STATUS_LABELS[s] || s || 'â€”';
     const icon  = STATUS_ICONS[s]  || 'fa-circle';
     return `<span class="badge badge-${s || 'sem_fatura'}"><i class="fas ${icon}"></i> ${label}</span>`;
   },
@@ -253,11 +253,11 @@ const Dashboard = {
         </div>
         <div class="metric-card">
           <div class="metric-icon metric-green"><i class="fas fa-circle-check"></i></div>
-          <div class="metric-info"><span class="metric-value">${d.ok_count}</span><span class="metric-label">Conferências OK</span></div>
+          <div class="metric-info"><span class="metric-value">${d.ok_count}</span><span class="metric-label">ConferÃªncias OK</span></div>
         </div>
         <div class="metric-card">
           <div class="metric-icon metric-red"><i class="fas fa-circle-xmark"></i></div>
-          <div class="metric-info"><span class="metric-value">${d.div_count}</span><span class="metric-label">Divergências</span></div>
+          <div class="metric-info"><span class="metric-value">${d.div_count}</span><span class="metric-label">DivergÃªncias</span></div>
         </div>
         <div class="metric-card">
           <div class="metric-icon" style="background:#fee2e2;color:#991b1b"><i class="fas fa-phone-slash"></i></div>
@@ -276,7 +276,7 @@ const Dashboard = {
       <div class="cards-row">
         <div class="summary-card"><span class="summary-label">Total Contratado</span><span class="summary-value">${U.money(d.total_contratado)}</span></div>
         <div class="summary-card"><span class="summary-label">Total Faturado</span><span class="summary-value ${finDiff > 0.005 ? 'text-danger' : ''}">${U.money(d.total_faturado)}</span></div>
-        <div class="summary-card"><span class="summary-label">Diferença Total</span><span class="summary-value ${finDiff > 0.005 ? 'val-pos' : finDiff < -0.005 ? 'val-neg' : 'val-zero'}">${U.money(finDiff)}</span></div>
+        <div class="summary-card"><span class="summary-label">DiferenÃ§a Total</span><span class="summary-value ${finDiff > 0.005 ? 'val-pos' : finDiff < -0.005 ? 'val-neg' : 'val-zero'}">${U.money(finDiff)}</span></div>
         <div class="summary-card"><span class="summary-label">Aproximados</span><span class="summary-value text-warning">${d.aprox_count}</span></div>
         <div class="summary-card"><span class="summary-label">Sem Contrato</span><span class="summary-value text-info">${d.sem_contrato_count}</span></div>
         <div class="summary-card"><span class="summary-label">Sem Fatura</span><span class="summary-value text-muted">${d.sem_fatura_count}</span></div>
@@ -288,20 +288,20 @@ const Dashboard = {
       ${d.fl_total > 0 ? `
       <div class="section-title" style="margin-top:28px;margin-bottom:12px">
         <h3 style="font-size:15px;font-weight:600;color:var(--text-primary)">
-          <i class="fas fa-file-invoice-dollar" style="color:#660099;margin-right:6px"></i>Auditoria de Faturas
+          <i class="fas fa-file-invoice-dollar" style="color:#6B1D3A;margin-right:6px"></i>Auditoria de Faturas
         </h3>
       </div>
       <div class="cards-row">
         <div class="summary-card"><span class="summary-label">Linhas Importadas</span><span class="summary-value">${d.fl_total}</span></div>
         <div class="summary-card"><span class="summary-label">Total Faturado</span><span class="summary-value">${U.money(d.fl_total_faturado)}</span></div>
         <div class="summary-card"><span class="summary-label">Total Contrato</span><span class="summary-value">${U.money(d.fl_total_contrato)}</span></div>
-        <div class="summary-card"><span class="summary-label">Diferença Total</span><span class="summary-value ${d.fl_diferenca > 0.005 ? 'val-pos' : d.fl_diferenca < -0.005 ? 'val-neg' : 'val-zero'}">${U.money(d.fl_diferenca)}</span></div>
+        <div class="summary-card"><span class="summary-label">DiferenÃ§a Total</span><span class="summary-value ${d.fl_diferenca > 0.005 ? 'val-pos' : d.fl_diferenca < -0.005 ? 'val-neg' : 'val-zero'}">${U.money(d.fl_diferenca)}</span></div>
         <div class="summary-card"><span class="summary-label">Divergentes</span><span class="summary-value text-danger">${d.fl_divergentes}</span></div>
         <div class="summary-card"><span class="summary-label">Conformes</span><span class="summary-value text-success">${d.fl_ok}</span></div>
       </div>` : `
       <div class="section-title" style="margin-top:28px;margin-bottom:12px">
         <h3 style="font-size:15px;font-weight:600;color:var(--text-primary)">
-          <i class="fas fa-file-invoice-dollar" style="color:#660099;margin-right:6px"></i>Auditoria de Faturas
+          <i class="fas fa-file-invoice-dollar" style="color:#6B1D3A;margin-right:6px"></i>Auditoria de Faturas
         </h3>
       </div>
       <div class="cards-row">
@@ -314,11 +314,11 @@ const Dashboard = {
 
       <div class="charts-grid">
         <div class="chart-card">
-          <h3 class="chart-title"><i class="fas fa-chart-pie" style="color:var(--primary);margin-right:6px"></i>Status das Comparações</h3>
+          <h3 class="chart-title"><i class="fas fa-chart-pie" style="color:var(--primary);margin-right:6px"></i>Status das ComparaÃ§Ãµes</h3>
           <div class="chart-wrap"><canvas id="chart-status"></canvas></div>
         </div>
         <div class="chart-card chart-wide">
-          <h3 class="chart-title"><i class="fas fa-chart-bar" style="color:var(--primary);margin-right:6px"></i>Evolução Mensal</h3>
+          <h3 class="chart-title"><i class="fas fa-chart-bar" style="color:var(--primary);margin-right:6px"></i>EvoluÃ§Ã£o Mensal</h3>
           <div class="chart-wrap"><canvas id="chart-monthly"></canvas></div>
         </div>
         <div class="chart-card">
@@ -328,14 +328,14 @@ const Dashboard = {
       </div>
 
       <div class="quick-actions">
-        <h3>Ações Rápidas</h3>
+        <h3>AÃ§Ãµes RÃ¡pidas</h3>
         <div class="quick-actions-grid">
           <button class="quick-btn" onclick="navigate('cadastro')"><i class="fas fa-address-book"></i><span>Cadastro de Linhas</span></button>
           <button class="quick-btn" onclick="navigate('contratos')"><i class="fas fa-file-signature"></i><span>Gerenciar Contratos</span></button>
           <button class="quick-btn" onclick="navigate('upload-contas')"><i class="fas fa-cloud-upload-alt"></i><span>Importar Conta</span></button>
           <button class="quick-btn" onclick="navigate('fatura-xls')"><i class="fas fa-file-excel"></i><span>Importar Faturas</span></button>
-          <button class="quick-btn" onclick="navigate('comparacoes')"><i class="fas fa-scale-balanced"></i><span>Ver Conferências</span></button>
-          <button class="quick-btn" onclick="navigate('relatorios')"><i class="fas fa-file-export"></i><span>Exportar Relatório</span></button>
+          <button class="quick-btn" onclick="navigate('comparacoes')"><i class="fas fa-scale-balanced"></i><span>Ver ConferÃªncias</span></button>
+          <button class="quick-btn" onclick="navigate('relatorios')"><i class="fas fa-file-export"></i><span>Exportar RelatÃ³rio</span></button>
         </div>
       </div>
 
@@ -346,15 +346,15 @@ const Dashboard = {
         </h3>
         <table class="data-table" style="font-size:13px">
           <thead><tr>
-            <th>Número</th><th>Funcionário</th><th>Empresa</th><th>Dia Venc.</th><th>Dias Restantes</th><th>Valor</th><th>Urgência</th>
+            <th>NÃºmero</th><th>FuncionÃ¡rio</th><th>Empresa</th><th>Dia Venc.</th><th>Dias Restantes</th><th>Valor</th><th>UrgÃªncia</th>
           </tr></thead>
           <tbody>${alertas.map(a => {
             const urgCls = a.urgencia === 'vencido' ? 'badge-divergente' : a.urgencia === 'critico' ? 'badge-divergente' : a.urgencia === 'alerta' ? 'badge-aproximado' : 'badge-ok';
-            const urgLabel = a.urgencia === 'vencido' ? 'Vencido' : a.urgencia === 'critico' ? 'Crítico' : a.urgencia === 'alerta' ? 'Atenção' : 'Normal';
+            const urgLabel = a.urgencia === 'vencido' ? 'Vencido' : a.urgencia === 'critico' ? 'CrÃ­tico' : a.urgencia === 'alerta' ? 'AtenÃ§Ã£o' : 'Normal';
             return `<tr>
               <td>${U.phone(a.numero_telefone)}</td>
-              <td>${U.esc(a.nome_funcionario || '—')}</td>
-              <td>${U.esc(a.empresa || '—')}</td>
+              <td>${U.esc(a.nome_funcionario || 'â€”')}</td>
+              <td>${U.esc(a.empresa || 'â€”')}</td>
               <td style="text-align:center">${a.vencimento_dia}</td>
               <td style="text-align:center;font-weight:600">${a.dias_faltam <= 0 ? 'Vencido' : a.dias_faltam + ' dias'}</td>
               <td>${U.money(a.valor_plano)}</td>
@@ -374,7 +374,7 @@ const Dashboard = {
       S.charts.status = new Chart(document.getElementById('chart-status'), {
         type: 'doughnut',
         data: {
-          labels: ['Conforme', 'Aproximado', 'Divergente', 'Sem Contrato', 'Sem Fatura', 'Ambíguo'],
+          labels: ['Conforme', 'Aproximado', 'Divergente', 'Sem Contrato', 'Sem Fatura', 'AmbÃ­guo'],
           datasets: [{ data: [d.ok_count, d.aprox_count, d.div_count, d.sem_contrato_count, d.sem_fatura_count, d.ambiguo_count],
             backgroundColor: ['#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#9ca3af', '#f97316'], borderWidth: 2, borderColor: '#fff' }],
         },
@@ -493,20 +493,20 @@ const Contratos = {
 
   table(res) {
     if (!res.data.length) {
-      const hint = S.contratos.search ? 'Tente outros termos.' : 'Clique em "Novo Contrato" ou faça upload de um PDF de contrato.';
+      const hint = S.contratos.search ? 'Tente outros termos.' : 'Clique em "Novo Contrato" ou faÃ§a upload de um PDF de contrato.';
       return U.emptyState('fa-file-signature', 'Nenhum contrato encontrado', hint,
         `<button class="btn btn-primary" onclick="Contratos.openForm()"><i class="fas fa-plus"></i> Novo Contrato</button>
          <button class="btn btn-outline" style="margin-left:8px" onclick="Contratos.openUpload()"><i class="fas fa-file-pdf"></i> Upload PDF</button>`);
     }
     const rows = res.data.map(c => `
       <tr>
-        <td><span class="mono">${U.esc(c.numero_contrato||'—')}</span></td>
+        <td><span class="mono">${U.esc(c.numero_contrato||'â€”')}</span></td>
         <td><span class="phone-number">${U.phone(c.linha_telefone)}</span></td>
         <td><strong>${U.money(c.valor_contratado)}</strong></td>
-        <td>${U.esc(c.cliente||'—')}</td>
-        <td>${c.operadora?`<span class="chip">${U.esc(c.operadora)}</span>`:'—'}</td>
-        <td class="text-muted text-sm">${U.esc(c.vigencia_inicio||'—')}</td>
-        <td class="text-muted text-sm">${U.esc(c.data_importacao||'—')}</td>
+        <td>${U.esc(c.cliente||'â€”')}</td>
+        <td>${c.operadora?`<span class="chip">${U.esc(c.operadora)}</span>`:'â€”'}</td>
+        <td class="text-muted text-sm">${U.esc(c.vigencia_inicio||'â€”')}</td>
+        <td class="text-muted text-sm">${U.esc(c.data_importacao||'â€”')}</td>
         <td>
           <div class="table-actions">
             <button class="btn-icon-sm" title="Editar" onclick="Contratos.openForm(${c.id})"><i class="fas fa-pencil"></i></button>
@@ -519,7 +519,7 @@ const Contratos = {
     const pag = pages > 1 ? `
       <div class="pagination">
         <button class="btn-page" onclick="Contratos.goPage(${S.contratos.page-1})" ${S.contratos.page<=1?'disabled':''}><i class="fas fa-chevron-left"></i></button>
-        <span>Página ${S.contratos.page} de ${pages} &nbsp;·&nbsp; ${res.total} registros</span>
+        <span>PÃ¡gina ${S.contratos.page} de ${pages} &nbsp;Â·&nbsp; ${res.total} registros</span>
         <button class="btn-page" onclick="Contratos.goPage(${S.contratos.page+1})" ${S.contratos.page>=pages?'disabled':''}><i class="fas fa-chevron-right"></i></button>
       </div>` : `<div class="table-footer-info">${res.total} registro(s)</div>`;
 
@@ -527,9 +527,9 @@ const Contratos = {
       <div class="table-wrapper">
         <table class="data-table">
           <thead><tr>
-            <th>Nº Contrato</th><th>Linha</th><th>Valor Contratado</th>
-            <th>Cliente</th><th>Operadora</th><th>Vigência Início</th>
-            <th>Importado em</th><th>Ações</th>
+            <th>NÂº Contrato</th><th>Linha</th><th>Valor Contratado</th>
+            <th>Cliente</th><th>Operadora</th><th>VigÃªncia InÃ­cio</th>
+            <th>Importado em</th><th>AÃ§Ãµes</th>
           </tr></thead>
           <tbody>${rows}</tbody>
         </table>
@@ -554,12 +554,12 @@ const Contratos = {
       <h2 class="modal-title"><i class="fas fa-file-signature" style="color:var(--primary)"></i>${title}</h2>
       <form id="ctform" onsubmit="Contratos.saveForm(event)" class="modal-form">
         <div class="form-grid">
-          <div class="form-group"><label>Nº do Contrato</label><input name="numero_contrato" value="${U.esc(c.numero_contrato||'')}" placeholder="Ex: CTR-2024-001"></div>
+          <div class="form-group"><label>NÂº do Contrato</label><input name="numero_contrato" value="${U.esc(c.numero_contrato||'')}" placeholder="Ex: CTR-2024-001"></div>
           <div class="form-group required"><label>Linha / Telefone *</label><input name="linha_telefone" value="${U.esc(c.linha_telefone||'')}" placeholder="(11) 99999-9999" required></div>
           <div class="form-group required"><label>Valor Contratado (R$) *</label><input type="number" name="valor_contratado" value="${c.valor_contratado??''}" step="0.01" min="0" placeholder="0.00" required></div>
           <div class="form-group"><label>Cliente / Empresa</label><input name="cliente" value="${U.esc(c.cliente||'')}" placeholder="Nome do cliente"></div>
           <div class="form-group"><label>Operadora</label><input name="operadora" value="${U.esc(c.operadora||'')}" placeholder="Vivo, Claro, Tim..."></div>
-          <div class="form-group"><label>Observações</label><textarea name="observacoes" rows="2">${U.esc(c.observacoes||'')}</textarea></div>
+          <div class="form-group"><label>ObservaÃ§Ãµes</label><textarea name="observacoes" rows="2">${U.esc(c.observacoes||'')}</textarea></div>
         </div>
         <div class="form-actions">
           <button type="button" class="btn btn-ghost" onclick="U.closeModal()">Cancelar</button>
@@ -592,8 +592,8 @@ const Contratos = {
     U.modal(`
       <div class="confirm-dialog">
         <div class="confirm-icon"><i class="fas fa-triangle-exclamation text-danger"></i></div>
-        <h3>Confirmar exclusão</h3>
-        <p>Deseja desativar este contrato? O registro será preservado no histórico e não aparecerá mais nas conferências.</p>
+        <h3>Confirmar exclusÃ£o</h3>
+        <p>Deseja desativar este contrato? O registro serÃ¡ preservado no histÃ³rico e nÃ£o aparecerÃ¡ mais nas conferÃªncias.</p>
         <div class="form-actions">
           <button class="btn btn-ghost" onclick="U.closeModal()">Cancelar</button>
           <button class="btn btn-danger" onclick="Contratos.doDelete(${id})"><i class="fas fa-trash"></i> Excluir</button>
@@ -622,7 +622,7 @@ const Contratos = {
       <div class="wizard-steps" id="ct-wsteps">
         <div class="wizard-step active" id="ct-ws1"><span>1</span> Upload</div>
         <div class="wizard-step" id="ct-ws2"><span>2</span> Revisar Dados</div>
-        <div class="wizard-step" id="ct-ws3"><span>3</span> Concluído</div>
+        <div class="wizard-step" id="ct-ws3"><span>3</span> ConcluÃ­do</div>
       </div>
       <div id="ct-wbody">${this.uploadStep1()}</div>`;
   },
@@ -634,7 +634,7 @@ const Contratos = {
         <i class="fas fa-file-pdf dropzone-icon"></i>
         <h3>Arraste o PDF de contrato aqui</h3>
         <p>ou <button class="btn-link" onclick="document.getElementById('ct-file').click()">selecione o arquivo</button></p>
-        <p class="text-muted text-sm">PDF com texto selecionável · até 50 MB</p>
+        <p class="text-muted text-sm">PDF com texto selecionÃ¡vel Â· atÃ© 50 MB</p>
       </div>`;
   },
 
@@ -652,7 +652,7 @@ const Contratos = {
       e.preventDefault(); dz.classList.remove('drag-over');
       const f = e.dataTransfer.files[0];
       if (f && f.name.endsWith('.pdf')) Contratos.processUpload(f);
-      else U.toast('Apenas arquivos PDF são aceitos.','error');
+      else U.toast('Apenas arquivos PDF sÃ£o aceitos.','error');
     });
   },
 
@@ -691,21 +691,21 @@ const Contratos = {
       ? `<div class="alert alert-warning">
            <i class="fas fa-triangle-exclamation"></i>
            <div>
-             <strong>Nenhum dado extraído automaticamente.</strong><br>
-             O PDF pode usar fonte não selecionável (imagem/OCR) ou layout não reconhecível.
+             <strong>Nenhum dado extraÃ­do automaticamente.</strong><br>
+             O PDF pode usar fonte nÃ£o selecionÃ¡vel (imagem/OCR) ou layout nÃ£o reconhecÃ­vel.
              Preencha os dados manualmente abaixo ou
-             <button class="btn-link" onclick="Contratos.toggleRawText()">ver texto bruto extraído</button>
+             <button class="btn-link" onclick="Contratos.toggleRawText()">ver texto bruto extraÃ­do</button>
              para identificar o formato.
            </div>
          </div>
          <div id="ct-raw-wrap" style="display:none;margin-bottom:12px">
-           <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px">Texto bruto extraído do PDF (primeiros 3000 caracteres):</div>
-           <textarea readonly style="width:100%;height:180px;font-family:monospace;font-size:11px;border:1px solid var(--border);border-radius:6px;padding:8px;background:#f8fafc;resize:vertical">${U.esc(rawText || '(nenhum texto encontrado — PDF pode ser escaneado/imagem)')}</textarea>
+           <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px">Texto bruto extraÃ­do do PDF (primeiros 3000 caracteres):</div>
+           <textarea readonly style="width:100%;height:180px;font-family:monospace;font-size:11px;border:1px solid var(--border);border-radius:6px;padding:8px;background:#f8fafc;resize:vertical">${U.esc(rawText || '(nenhum texto encontrado â€” PDF pode ser escaneado/imagem)')}</textarea>
          </div>` : '';
 
     const tableRows = rows.map((r, i) => `
       <tr id="ct-row-${i}">
-        <td><input name="numero_contrato" value="${U.esc(r.numero_contrato||'')}" placeholder="Nº contrato"></td>
+        <td><input name="numero_contrato" value="${U.esc(r.numero_contrato||'')}" placeholder="NÂº contrato"></td>
         <td><input name="linha_telefone" value="${U.esc(r.linha_telefone||'')}" placeholder="(11)99999-9999" required></td>
         <td><input type="number" name="valor_contratado" value="${r.valor_contratado??''}" step="0.01" placeholder="0.00" required></td>
         <td><input name="cliente" value="${U.esc(r.cliente||'')}" placeholder="Cliente"></td>
@@ -716,14 +716,14 @@ const Contratos = {
     return `
       <div class="alert alert-info" style="margin-bottom:12px">
         <i class="fas fa-circle-info"></i>
-        <span>Arquivo: <strong>${U.esc(S.uploadContrato.filename)}</strong> · <strong>${rows.length}</strong> linha(s) extraída(s).
+        <span>Arquivo: <strong>${U.esc(S.uploadContrato.filename)}</strong> Â· <strong>${rows.length}</strong> linha(s) extraÃ­da(s).
         Revise os dados antes de salvar.</span>
       </div>
       ${hint}
       <form id="ct-preview-form">
         <div class="preview-table-wrap">
           <table class="preview-table" id="ct-preview-table">
-            <thead><tr><th>Nº Contrato</th><th>Linha *</th><th>Valor Contratado *</th><th>Cliente</th><th>Operadora</th><th></th></tr></thead>
+            <thead><tr><th>NÂº Contrato</th><th>Linha *</th><th>Valor Contratado *</th><th>Cliente</th><th>Operadora</th><th></th></tr></thead>
             <tbody>${tableRows}</tbody>
           </table>
         </div>
@@ -776,7 +776,7 @@ const Contratos = {
 
   async savePreview() {
     const contratos = this.readPreviewForm();
-    if (!contratos.length) { U.toast('Nenhuma linha válida para salvar.','warning'); return; }
+    if (!contratos.length) { U.toast('Nenhuma linha vÃ¡lida para salvar.','warning'); return; }
     try {
       U.loading(true, `Salvando ${contratos.length} contrato(s)...`);
       const res = await API.post('/api/contratos/salvar-lote', { contratos, arquivo_nome: S.uploadContrato.filename });
@@ -784,7 +784,7 @@ const Contratos = {
       this.setStep(3);
       document.getElementById('ct-wbody').innerHTML = `
         <div class="result-panel">
-          <span class="result-icon">🎉</span>
+          <span class="result-icon">ðŸŽ‰</span>
           <h3>${res.saved} contrato(s) salvo(s) com sucesso!</h3>
           ${res.errors?.length ? `<p style="color:var(--danger-text)">${res.errors.length} erro(s): ${res.errors.slice(0,3).join(', ')}</p>` : ''}
           <div class="form-actions" style="justify-content:center;margin-top:20px">
@@ -811,7 +811,7 @@ const UploadContas = {
   shell() {
     return `
       <div class="page-header">
-        <h1>Upload de Contas Telefônicas</h1>
+        <h1>Upload de Contas TelefÃ´nicas</h1>
       </div>
       <div class="wizard-steps" id="uc-wsteps">
         <div class="wizard-step active" id="uc-ws1"><span>1</span> Selecionar PDF</div>
@@ -827,14 +827,14 @@ const UploadContas = {
         <div class="dropzone" id="uc-dz">
           <input type="file" id="uc-file" accept=".pdf" style="display:none">
           <i class="fas fa-file-invoice dropzone-icon" style="color:var(--primary)"></i>
-          <h3>Arraste a conta/fatura telefônica aqui</h3>
+          <h3>Arraste a conta/fatura telefÃ´nica aqui</h3>
           <p>ou <button class="btn-link" onclick="document.getElementById('uc-file').click()">selecione o arquivo PDF</button></p>
-          <p class="text-muted text-sm">O sistema irá extrair automaticamente as linhas e valores · PDF até 100 MB</p>
+          <p class="text-muted text-sm">O sistema irÃ¡ extrair automaticamente as linhas e valores Â· PDF atÃ© 100 MB</p>
         </div>
         <div class="alert alert-info" style="margin-top:14px">
           <i class="fas fa-circle-info"></i>
-          <span>Após o upload, você poderá revisar e corrigir os dados extraídos antes de confirmar.
-          A conferência com os contratos será feita automaticamente.</span>
+          <span>ApÃ³s o upload, vocÃª poderÃ¡ revisar e corrigir os dados extraÃ­dos antes de confirmar.
+          A conferÃªncia com os contratos serÃ¡ feita automaticamente.</span>
         </div>
       </div>`;
   },
@@ -852,7 +852,7 @@ const UploadContas = {
       e.preventDefault(); dz.classList.remove('drag-over');
       const f = e.dataTransfer.files[0];
       if (f && f.name.endsWith('.pdf')) UploadContas.processUpload(f);
-      else U.toast('Apenas arquivos PDF são aceitos.','error');
+      else U.toast('Apenas arquivos PDF sÃ£o aceitos.','error');
     });
   },
 
@@ -901,7 +901,7 @@ const UploadContas = {
         let allExtracted = [];
         for (let i = 0; i < chunks.length; i++) {
           const { start, end } = chunks[i];
-          document.getElementById('uc-body').innerHTML = `<div class="loading-inline"><div class="spinner-sm"></div> Parte ${i+1}/${chunks.length} (pág. ${start+1}-${end})...</div>
+          document.getElementById('uc-body').innerHTML = `<div class="loading-inline"><div class="spinner-sm"></div> Parte ${i+1}/${chunks.length} (pÃ¡g. ${start+1}-${end})...</div>
             <div style="background:var(--border);border-radius:6px;height:6px;margin:12px auto;max-width:400px;overflow:hidden">
               <div style="background:var(--primary);height:100%;width:${Math.round(((i+1)/chunks.length)*100)}%;transition:width .3s"></div>
             </div>`;
@@ -921,7 +921,7 @@ const UploadContas = {
         S.uploadConta.rawText = '';
         this.setStep(2);
         document.getElementById('uc-body').innerHTML = this.step2();
-        U.toast(`PDF dividido em ${chunks.length} partes. ${allExtracted.length} linhas extraídas.`);
+        U.toast(`PDF dividido em ${chunks.length} partes. ${allExtracted.length} linhas extraÃ­das.`);
       } catch(e) {
         document.getElementById('uc-body').innerHTML = `<div class="alert alert-error" style="max-width:600px;margin:0 auto"><i class="fas fa-triangle-exclamation"></i> ${e.message}</div>` + `<div style="max-width:600px;margin:12px auto">${this.step1()}</div>`;
         this.bindDropzone();
@@ -938,13 +938,13 @@ const UploadContas = {
       ? `<div class="alert alert-warning">
            <i class="fas fa-triangle-exclamation"></i>
            <div>
-             <strong>Nenhum dado extraído automaticamente.</strong><br>
+             <strong>Nenhum dado extraÃ­do automaticamente.</strong><br>
              O PDF pode ser escaneado (imagem). Preencha manualmente ou
-             <button class="btn-link" onclick="UploadContas.toggleRawText()">ver texto bruto extraído</button>.
+             <button class="btn-link" onclick="UploadContas.toggleRawText()">ver texto bruto extraÃ­do</button>.
            </div>
          </div>
          <div id="uc-raw-wrap" style="display:none;margin-bottom:12px">
-           <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px">Texto bruto extraído do PDF:</div>
+           <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:4px">Texto bruto extraÃ­do do PDF:</div>
            <textarea readonly style="width:100%;height:180px;font-family:monospace;font-size:11px;border:1px solid var(--border);border-radius:6px;padding:8px;background:#f8fafc;resize:vertical">${U.esc(rawText || '(nenhum texto encontrado)')}</textarea>
          </div>` : '';
 
@@ -954,27 +954,27 @@ const UploadContas = {
         <td><input type="number" name="valor_fatura" value="${r.valor_fatura??''}" step="0.01" placeholder="0.00" required></td>
         <td><input name="competencia" value="${U.esc(r.competencia||'')}" placeholder="2025-01"></td>
         <td><input name="operadora" value="${U.esc(r.operadora||'')}" placeholder="Vivo"></td>
-        <td><input name="numero_fatura" value="${U.esc(r.numero_fatura||'')}" placeholder="Nº da fatura"></td>
+        <td><input name="numero_fatura" value="${U.esc(r.numero_fatura||'')}" placeholder="NÂº da fatura"></td>
         <td><button type="button" class="btn-remove-row" title="Remover" onclick="UploadContas.removeRow(${i})"><i class="fas fa-trash"></i></button></td>
       </tr>`).join('');
 
     return `
       <div class="alert alert-info">
         <i class="fas fa-circle-info"></i>
-        <span>Arquivo: <strong>${U.esc(S.uploadConta.filename)}</strong> · <strong>${rows.length}</strong> linha(s) extraída(s).
+        <span>Arquivo: <strong>${U.esc(S.uploadConta.filename)}</strong> Â· <strong>${rows.length}</strong> linha(s) extraÃ­da(s).
         Revise os dados antes de confirmar.</span>
       </div>
       ${hint}
       <div class="preview-table-wrap">
         <table class="preview-table" id="uc-preview-table">
-          <thead><tr><th>Linha *</th><th>Valor Fatura *</th><th>Competência</th><th>Operadora</th><th>Nº Fatura</th><th></th></tr></thead>
+          <thead><tr><th>Linha *</th><th>Valor Fatura *</th><th>CompetÃªncia</th><th>Operadora</th><th>NÂº Fatura</th><th></th></tr></thead>
           <tbody>${tableRows}</tbody>
         </table>
       </div>
       <button type="button" class="btn-add-row" onclick="UploadContas.addRow()"><i class="fas fa-plus"></i> Adicionar linha manualmente</button>
       <div class="form-actions" style="margin-top:16px">
         <button class="btn btn-ghost" onclick="UploadContas.render()"><i class="fas fa-arrow-left"></i> Voltar</button>
-        <button class="btn btn-primary" onclick="UploadContas.save()"><i class="fas fa-scale-balanced"></i> Confirmar e Processar Conferência</button>
+        <button class="btn btn-primary" onclick="UploadContas.save()"><i class="fas fa-scale-balanced"></i> Confirmar e Processar ConferÃªncia</button>
       </div>`;
   },
 
@@ -1008,9 +1008,9 @@ const UploadContas = {
 
   async save() {
     const contas = this.readForm();
-    if (!contas.length) { U.toast('Nenhuma linha válida para salvar.','warning'); return; }
+    if (!contas.length) { U.toast('Nenhuma linha vÃ¡lida para salvar.','warning'); return; }
     try {
-      U.loading(true, `Salvando ${contas.length} conta(s) e processando conferência...`);
+      U.loading(true, `Salvando ${contas.length} conta(s) e processando conferÃªncia...`);
       const res = await API.post('/api/contas/salvar-lote', { contas, arquivo_nome: S.uploadConta.filename });
       U.loading(false);
       S.uploadConta.result = res;
@@ -1023,9 +1023,9 @@ const UploadContas = {
     const comp = res.comparacao || {};
     return `
       <div class="result-panel">
-        <span class="result-icon">✅</span>
+        <span class="result-icon">âœ…</span>
         <h3>${res.saved} conta(s) importada(s) com sucesso!</h3>
-        <p>A conferência automática foi realizada contra a base de contratos.</p>
+        <p>A conferÃªncia automÃ¡tica foi realizada contra a base de contratos.</p>
         ${res.errors?.length ? `<div class="alert alert-warning"><i class="fas fa-triangle-exclamation"></i>${res.errors.length} linha(s) com erro: ${res.errors.slice(0,3).join(', ')}</div>` : ''}
         <div class="result-stats">
           <div class="result-stat" style="border-color:var(--success-border);background:var(--success-bg)">
@@ -1042,15 +1042,15 @@ const UploadContas = {
           </div>
         </div>
         <div class="form-actions" style="justify-content:center">
-          <button class="btn btn-ghost" onclick="UploadContas.render()"><i class="fas fa-upload"></i> Nova Importação</button>
-          <button class="btn btn-primary" onclick="navigate('comparacoes')"><i class="fas fa-scale-balanced"></i> Ver Conferência</button>
+          <button class="btn btn-ghost" onclick="UploadContas.render()"><i class="fas fa-upload"></i> Nova ImportaÃ§Ã£o</button>
+          <button class="btn btn-primary" onclick="navigate('comparacoes')"><i class="fas fa-scale-balanced"></i> Ver ConferÃªncia</button>
         </div>
       </div>`;
   },
 };
 
 // -------------------------------------------------------
-// COMPARAÇÕES
+// COMPARAÃ‡Ã•ES
 // -------------------------------------------------------
 const Comparacoes = {
   async load() {
@@ -1080,7 +1080,7 @@ const Comparacoes = {
   shell() {
     return `
       <div class="page-header">
-        <h1>Conferência de Contas</h1>
+        <h1>ConferÃªncia de Contas</h1>
         <div class="page-header-actions">
           <button class="btn btn-outline" onclick="Comparacoes.fetch()"><i class="fas fa-rotate-right"></i> Atualizar</button>
           <button class="btn btn-success" onclick="Comparacoes.runManual()"><i class="fas fa-play"></i> Reprocessar</button>
@@ -1093,7 +1093,7 @@ const Comparacoes = {
           <input id="cmp-search" type="text" placeholder="Buscar por linha ou contrato..." value="${U.esc(S.comparacoes.search)}">
         </div>
         <select id="cmp-comp" class="select-filter" onchange="Comparacoes.filterChange('competencia',this.value)">
-          <option value="">Todas as competências</option>
+          <option value="">Todas as competÃªncias</option>
         </select>
         <select id="cmp-op" class="select-filter" onchange="Comparacoes.filterChange('operadora',this.value)">
           <option value="">Todas as operadoras</option>
@@ -1132,7 +1132,7 @@ const Comparacoes = {
   async fetch() {
     const body = document.getElementById('cmp-body');
     if (!body) return;
-    body.innerHTML = '<div class="loading-inline"><div class="spinner-sm"></div> Carregando conferências...</div>';
+    body.innerHTML = '<div class="loading-inline"><div class="spinner-sm"></div> Carregando conferÃªncias...</div>';
     try {
       const url = `/api/comparacoes?page=${S.comparacoes.page}&per_page=100`
         + `&status=${encodeURIComponent(S.comparacoes.status)}`
@@ -1169,8 +1169,8 @@ const Comparacoes = {
         return U.emptyState('fa-filter', 'Nenhum resultado para esse filtro', 'Tente remover os filtros para ver todos os registros.',
           `<button class="btn btn-ghost" onclick="Comparacoes.clearFilters()"><i class="fas fa-filter-circle-xmark"></i> Limpar Filtros</button>`);
       }
-      return U.emptyState('fa-scale-balanced', 'Nenhuma conferência realizada ainda',
-        'Importe contratos e faça upload de contas para iniciar a auditoria.',
+      return U.emptyState('fa-scale-balanced', 'Nenhuma conferÃªncia realizada ainda',
+        'Importe contratos e faÃ§a upload de contas para iniciar a auditoria.',
         `<button class="btn btn-outline" onclick="navigate('contratos')"><i class="fas fa-file-signature"></i> Contratos</button>
          <button class="btn btn-primary" style="margin-left:8px" onclick="navigate('upload-contas')"><i class="fas fa-upload"></i> Importar Conta</button>`);
     }
@@ -1179,23 +1179,23 @@ const Comparacoes = {
       <tr class="row-${c.status_comparacao} row-clickable" onclick="Comparacoes.openDetail(${c.id})">
         <td>${U.statusBadge(c.status_comparacao)}</td>
         <td><span class="phone-number">${U.phone(c.linha_telefone)}</span></td>
-        <td><span class="mono">${U.esc(c.numero_contrato||'—')}</span></td>
-        <td class="text-right">${c.valor_contratado !== null && c.valor_contratado !== undefined ? U.money(c.valor_contratado) : '—'}</td>
-        <td class="text-right">${c.valor_fatura !== null && c.valor_fatura !== undefined ? U.money(c.valor_fatura) : '—'}</td>
-        <td class="text-right ${U.diffClass(c.diferenca_valor)}">${c.diferenca_valor !== null && c.diferenca_valor !== undefined ? (c.diferenca_valor>0?'+':'')+U.money(c.diferenca_valor) : '—'}</td>
-        <td class="text-right ${U.diffClass(c.diferenca_percentual)}">${c.diferenca_percentual !== null && c.diferenca_percentual !== undefined ? (c.diferenca_percentual>0?'+':'')+U.pct(c.diferenca_percentual) : '—'}</td>
-        <td>${c.competencia ? `<span class="comp-tag">${U.esc(c.competencia)}</span>` : '—'}</td>
-        <td>${c.operadora ? `<span class="chip">${U.esc(c.operadora)}</span>` : '—'}</td>
-        <td class="text-muted text-sm" title="${U.esc(c.observacao||'')}">${U.esc((c.observacao||'').slice(0,40)) + ((c.observacao||'').length>40?'…':'')}</td>
+        <td><span class="mono">${U.esc(c.numero_contrato||'â€”')}</span></td>
+        <td class="text-right">${c.valor_contratado !== null && c.valor_contratado !== undefined ? U.money(c.valor_contratado) : 'â€”'}</td>
+        <td class="text-right">${c.valor_fatura !== null && c.valor_fatura !== undefined ? U.money(c.valor_fatura) : 'â€”'}</td>
+        <td class="text-right ${U.diffClass(c.diferenca_valor)}">${c.diferenca_valor !== null && c.diferenca_valor !== undefined ? (c.diferenca_valor>0?'+':'')+U.money(c.diferenca_valor) : 'â€”'}</td>
+        <td class="text-right ${U.diffClass(c.diferenca_percentual)}">${c.diferenca_percentual !== null && c.diferenca_percentual !== undefined ? (c.diferenca_percentual>0?'+':'')+U.pct(c.diferenca_percentual) : 'â€”'}</td>
+        <td>${c.competencia ? `<span class="comp-tag">${U.esc(c.competencia)}</span>` : 'â€”'}</td>
+        <td>${c.operadora ? `<span class="chip">${U.esc(c.operadora)}</span>` : 'â€”'}</td>
+        <td class="text-muted text-sm" title="${U.esc(c.observacao||'')}">${U.esc((c.observacao||'').slice(0,40)) + ((c.observacao||'').length>40?'â€¦':'')}</td>
       </tr>`).join('');
 
     const pages = Math.ceil(res.total / 100);
     const pag = pages > 1 ? `
       <div class="pagination">
         <button class="btn-page" onclick="Comparacoes.goPage(${S.comparacoes.page-1})" ${S.comparacoes.page<=1?'disabled':''}><i class="fas fa-chevron-left"></i></button>
-        <span>Página ${S.comparacoes.page} de ${pages} &nbsp;·&nbsp; ${res.total} registros</span>
+        <span>PÃ¡gina ${S.comparacoes.page} de ${pages} &nbsp;Â·&nbsp; ${res.total} registros</span>
         <button class="btn-page" onclick="Comparacoes.goPage(${S.comparacoes.page+1})" ${S.comparacoes.page>=pages?'disabled':''}><i class="fas fa-chevron-right"></i></button>
-      </div>` : `<div class="table-footer-info">${res.total} comparação(ões)</div>`;
+      </div>` : `<div class="table-footer-info">${res.total} comparaÃ§Ã£o(Ãµes)</div>`;
 
     return `
       <div class="table-wrapper">
@@ -1204,7 +1204,7 @@ const Comparacoes = {
             <th>Status</th><th>Linha</th><th>Contrato</th>
             <th class="text-right">V. Contratado</th><th class="text-right">V. Fatura</th>
             <th class="text-right">Dif. R$</th><th class="text-right">Dif. %</th>
-            <th>Competência</th><th>Operadora</th><th>Observação</th>
+            <th>CompetÃªncia</th><th>Operadora</th><th>ObservaÃ§Ã£o</th>
           </tr></thead>
           <tbody>${rows}</tbody>
         </table>
@@ -1217,7 +1217,7 @@ const Comparacoes = {
     try {
       const [comp, hist] = await Promise.all([
         API.get(`/api/comparacoes?page=1&per_page=1&search=`).then(() =>
-          // fetch single through list filtered  — ou abrir simples via historico por id
+          // fetch single through list filtered  â€” ou abrir simples via historico por id
           API.get(`/api/comparacoes/${id}/historico`).then(h => ({ hist: h }))
         ).catch(() => ({})),
         API.get(`/api/comparacoes/${id}/historico`),
@@ -1235,7 +1235,7 @@ const Comparacoes = {
     const diffCls = latest.diferenca_valor > 0.005 ? 'diff-div-pos' : latest.diferenca_valor < -0.005 ? 'diff-div-neg' :
                     (latest.status_comparacao === 'aproximado' ? 'diff-aprox' : 'diff-ok');
     return `
-      <h2 class="modal-title"><i class="fas fa-scale-balanced" style="color:var(--primary)"></i>Detalhe da Conferência</h2>
+      <h2 class="modal-title"><i class="fas fa-scale-balanced" style="color:var(--primary)"></i>Detalhe da ConferÃªncia</h2>
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
         ${U.statusBadge(latest.status_comparacao)}
         <span class="phone-number" style="font-size:16px">${U.phone(latest.linha_telefone)}</span>
@@ -1245,30 +1245,30 @@ const Comparacoes = {
       <div class="detail-grid">
         <div class="detail-section">
           <h4><i class="fas fa-file-signature"></i> Contrato</h4>
-          <div class="detail-field"><label>Nº Contrato</label><span>${U.esc(latest.numero_contrato||'—')}</span></div>
+          <div class="detail-field"><label>NÂº Contrato</label><span>${U.esc(latest.numero_contrato||'â€”')}</span></div>
           <div class="detail-field"><label>Valor Contratado</label><span>${U.money(latest.valor_contratado)}</span></div>
-          <div class="detail-field"><label>Operadora</label><span>${U.esc(latest.operadora||'—')}</span></div>
+          <div class="detail-field"><label>Operadora</label><span>${U.esc(latest.operadora||'â€”')}</span></div>
         </div>
         <div class="detail-section">
           <h4><i class="fas fa-file-invoice"></i> Fatura</h4>
           <div class="detail-field"><label>Valor Fatura</label><span>${U.money(latest.valor_fatura)}</span></div>
-          <div class="detail-field"><label>Competência</label><span>${U.esc(latest.competencia||'—')}</span></div>
+          <div class="detail-field"><label>CompetÃªncia</label><span>${U.esc(latest.competencia||'â€”')}</span></div>
         </div>
       </div>
 
       <div class="detail-section" style="margin-bottom:16px;text-align:center">
-        <h4>Diferença Calculada</h4>
+        <h4>DiferenÃ§a Calculada</h4>
         <div class="diff-highlight ${diffCls}" style="margin-top:8px">
           ${latest.diferenca_valor !== null && latest.diferenca_valor !== undefined
             ? `${latest.diferenca_valor > 0 ? '+' : ''}${U.money(latest.diferenca_valor)} (${latest.diferenca_valor > 0 ? '+' : ''}${U.pct(latest.diferenca_percentual)})`
-            : 'Não calculado'}
+            : 'NÃ£o calculado'}
         </div>
         ${latest.observacao ? `<p style="font-size:13px;color:var(--text-secondary);margin-top:10px">${U.esc(latest.observacao)}</p>` : ''}
       </div>
 
       ${hist.length > 1 ? `
         <div class="detail-section">
-          <h4><i class="fas fa-clock-rotate-left"></i> Histórico desta Linha (últimos ${hist.length} meses)</h4>
+          <h4><i class="fas fa-clock-rotate-left"></i> HistÃ³rico desta Linha (Ãºltimos ${hist.length} meses)</h4>
           <div class="history-chart-wrap"><canvas id="hist-chart"></canvas></div>
         </div>` : ''}
 
@@ -1301,24 +1301,24 @@ const Comparacoes = {
 
   async runManual() {
     try {
-      U.loading(true, 'Reprocessando conferências...');
+      U.loading(true, 'Reprocessando conferÃªncias...');
       const res = await API.post('/api/comparar', { competencia: S.comparacoes.competencia || null });
       U.loading(false);
-      U.toast(`Conferência concluída: ${res.totais?.ok||0} ok, ${res.totais?.divergente||0} divergentes.`);
+      U.toast(`ConferÃªncia concluÃ­da: ${res.totais?.ok||0} ok, ${res.totais?.divergente||0} divergentes.`);
       this.fetch();
     } catch(e) { U.loading(false); U.toast(e.message,'error'); }
   },
 };
 
 // -------------------------------------------------------
-// HISTÓRICO
+// HISTÃ“RICO
 // -------------------------------------------------------
 const Historico = {
   async load() {
     const sec = document.getElementById('page-historico');
     sec.innerHTML = `
       <div class="page-header">
-        <h1>Histórico de Importações</h1>
+        <h1>HistÃ³rico de ImportaÃ§Ãµes</h1>
         <div class="page-header-actions">
           <button class="btn btn-outline" onclick="Historico.load()"><i class="fas fa-rotate-right"></i> Atualizar</button>
         </div>
@@ -1333,38 +1333,38 @@ const Historico = {
   },
 
   table(data) {
-    if (!data.length) return U.emptyState('fa-clock-rotate-left', 'Nenhuma importação registrada', 'As importações de contratos e contas aparecerão aqui.');
+    if (!data.length) return U.emptyState('fa-clock-rotate-left', 'Nenhuma importaÃ§Ã£o registrada', 'As importaÃ§Ãµes de contratos e contas aparecerÃ£o aqui.');
     const rows = data.map(i => `
       <tr>
         <td>${i.tipo === 'contrato'
           ? '<span class="badge badge-ok"><i class="fas fa-file-signature"></i> Contrato</span>'
           : '<span class="badge badge-sem_contrato"><i class="fas fa-file-invoice"></i> Conta</span>'}</td>
-        <td title="${U.esc(i.arquivo_nome||'')}">${U.esc((i.arquivo_nome||'Importação manual').slice(0,50))}</td>
-        <td class="text-muted">${U.esc(i.data_importacao||'—')}</td>
+        <td title="${U.esc(i.arquivo_nome||'')}">${U.esc((i.arquivo_nome||'ImportaÃ§Ã£o manual').slice(0,50))}</td>
+        <td class="text-muted">${U.esc(i.data_importacao||'â€”')}</td>
         <td><strong>${i.total_registros}</strong></td>
         <td><span class="badge ${i.status==='concluido'?'badge-ok':'badge-divergente'}">${U.esc(i.status)}</span></td>
         <td class="text-muted text-sm">${U.esc((i.observacoes||'').slice(0,60))}</td>
         <td>
-          <button class="btn-icon-sm btn-danger" title="Excluir importação" onclick="Historico.confirmDelete(${i.id})"><i class="fas fa-trash"></i></button>
+          <button class="btn-icon-sm btn-danger" title="Excluir importaÃ§Ã£o" onclick="Historico.confirmDelete(${i.id})"><i class="fas fa-trash"></i></button>
         </td>
       </tr>`).join('');
 
     return `
       <div class="historico-table-wrap">
         <table class="data-table">
-          <thead><tr><th>Tipo</th><th>Arquivo</th><th>Data</th><th>Registros</th><th>Status</th><th>Observações</th><th>Ação</th></tr></thead>
+          <thead><tr><th>Tipo</th><th>Arquivo</th><th>Data</th><th>Registros</th><th>Status</th><th>ObservaÃ§Ãµes</th><th>AÃ§Ã£o</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
       </div>
-      <div class="table-footer-info">${data.length} importação(ões)</div>`;
+      <div class="table-footer-info">${data.length} importaÃ§Ã£o(Ãµes)</div>`;
   },
 
   confirmDelete(id) {
     U.modal(`
       <div class="confirm-dialog">
         <div class="confirm-icon"><i class="fas fa-triangle-exclamation text-danger"></i></div>
-        <h3>Excluir importação?</h3>
-        <p>As contas e comparações relacionadas a esta importação também serão excluídas permanentemente. Esta ação não pode ser desfeita.</p>
+        <h3>Excluir importaÃ§Ã£o?</h3>
+        <p>As contas e comparaÃ§Ãµes relacionadas a esta importaÃ§Ã£o tambÃ©m serÃ£o excluÃ­das permanentemente. Esta aÃ§Ã£o nÃ£o pode ser desfeita.</p>
         <div class="form-actions">
           <button class="btn btn-ghost" onclick="U.closeModal()">Cancelar</button>
           <button class="btn btn-danger" onclick="Historico.doDelete(${id})"><i class="fas fa-trash"></i> Excluir</button>
@@ -1376,20 +1376,20 @@ const Historico = {
     try {
       U.loading(true,'Excluindo...');
       await API.del(`/api/historico/${id}`);
-      U.toast('Importação excluída.','info');
+      U.toast('ImportaÃ§Ã£o excluÃ­da.','info');
       U.closeModal(); U.loading(false); Historico.load();
     } catch(e) { U.loading(false); U.toast(e.message,'error'); }
   },
 };
 
 // -------------------------------------------------------
-// RELATÓRIOS
+// RELATÃ“RIOS
 // -------------------------------------------------------
 const Relatorios = {
   async render() {
     const sec = document.getElementById('page-relatorios');
     sec.innerHTML = `
-      <div class="page-header"><h1>Relatórios e Exportação</h1></div>
+      <div class="page-header"><h1>RelatÃ³rios e ExportaÃ§Ã£o</h1></div>
       <div id="rel-body"><div class="loading-inline"><div class="spinner-sm"></div></div></div>`;
     try {
       const [comps, ops] = await Promise.all([API.get('/api/competencias'), API.get('/api/operadoras')]);
@@ -1403,12 +1403,12 @@ const Relatorios = {
     const compOpts = comps.map(c => `<option value="${U.esc(c)}">${U.esc(c)}</option>`).join('');
     return `
       <div class="config-card" style="max-width:860px">
-        <h3><i class="fas fa-filter" style="color:var(--primary)"></i> Filtros de Exportação (Comparações)</h3>
+        <h3><i class="fas fa-filter" style="color:var(--primary)"></i> Filtros de ExportaÃ§Ã£o (ComparaÃ§Ãµes)</h3>
         <div class="form-row">
           <div class="form-group">
-            <label>Competência</label>
+            <label>CompetÃªncia</label>
             <select id="rel-comp" class="select-filter" style="width:100%">
-              <option value="">Todas as competências</option>${compOpts}
+              <option value="">Todas as competÃªncias</option>${compOpts}
             </select>
           </div>
           <div class="form-group">
@@ -1434,13 +1434,13 @@ const Relatorios = {
       </div>
 
       <div class="config-card" style="max-width:860px">
-        <h3><i class="fas fa-calendar-days" style="color:#660099"></i> Filtrar Faturas por Data / Número</h3>
+        <h3><i class="fas fa-calendar-days" style="color:#6B1D3A"></i> Filtrar Faturas por Data / NÃºmero</h3>
         <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">
-          Filtre as faturas importadas por período ou número da linha e exporte para Excel.
+          Filtre as faturas importadas por perÃ­odo ou nÃºmero da linha e exporte para Excel.
         </p>
         <div class="form-row">
           <div class="form-group">
-            <label>Data Início</label>
+            <label>Data InÃ­cio</label>
             <input type="date" id="rel-fat-inicio" style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border);border-radius:6px">
           </div>
           <div class="form-group">
@@ -1448,7 +1448,7 @@ const Relatorios = {
             <input type="date" id="rel-fat-fim" style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border);border-radius:6px">
           </div>
           <div class="form-group">
-            <label>Número da Linha</label>
+            <label>NÃºmero da Linha</label>
             <input type="text" id="rel-fat-numero" placeholder="Ex: 11999887766" style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border);border-radius:6px">
           </div>
         </div>
@@ -1464,7 +1464,7 @@ const Relatorios = {
       </div>
 
       <div class="config-card" style="max-width:860px">
-        <h3><i class="fas fa-chart-column" style="color:var(--primary)"></i> Relatórios Rápidos</h3>
+        <h3><i class="fas fa-chart-column" style="color:var(--primary)"></i> RelatÃ³rios RÃ¡pidos</h3>
         <div class="quick-actions-grid" style="margin-top:0">
           <button class="quick-btn" onclick="Relatorios.filtrarE('divergente')">
             <i class="fas fa-circle-xmark" style="color:var(--danger)"></i>
@@ -1499,7 +1499,7 @@ const Relatorios = {
     const a = document.createElement('a');
     a.href = url; a.target = '_blank';
     document.body.appendChild(a); a.click(); a.remove();
-    U.toast(`Download do relatório ${tipo.toUpperCase()} iniciado.`);
+    U.toast(`Download do relatÃ³rio ${tipo.toUpperCase()} iniciado.`);
   },
 
   async filtrarFaturas() {
@@ -1518,13 +1518,13 @@ const Relatorios = {
       }
       const rows = items.map(fl => `<tr>
         <td>${U.phone(fl.numero_vivo)}</td>
-        <td>${U.esc(fl.plano || '—')}</td>
+        <td>${U.esc(fl.plano || 'â€”')}</td>
         <td class="text-right">${U.money(fl.valor_fatura)}</td>
         <td class="text-right">${U.money(fl.valor_contrato)}</td>
         <td class="text-right ${fl.diferenca > 0.005 ? 'val-pos' : fl.diferenca < -0.005 ? 'val-neg' : 'val-zero'}">${U.money(fl.diferenca)}</td>
-        <td>${fl.status === 'ok' ? '<span class="badge badge-ok">OK</span>' : fl.status === 'divergente' ? '<span class="badge badge-divergente">Divergente</span>' : '—'}</td>
-        <td>${U.esc(fl.competencia || '—')}</td>
-        <td style="font-size:11px">${U.esc(fl.data_importacao || '—')}</td>
+        <td>${fl.status === 'ok' ? '<span class="badge badge-ok">OK</span>' : fl.status === 'divergente' ? '<span class="badge badge-divergente">Divergente</span>' : 'â€”'}</td>
+        <td>${U.esc(fl.competencia || 'â€”')}</td>
+        <td style="font-size:11px">${U.esc(fl.data_importacao || 'â€”')}</td>
       </tr>`).join('');
 
       resultEl.innerHTML = `
@@ -1532,8 +1532,8 @@ const Relatorios = {
         <div class="table-wrapper">
           <table class="data-table" style="font-size:12px">
             <thead><tr>
-              <th>Número</th><th>Plano</th><th class="text-right">Fatura</th><th class="text-right">Contrato</th>
-              <th class="text-right">Diferença</th><th>Status</th><th>Competência</th><th>Data</th>
+              <th>NÃºmero</th><th>Plano</th><th class="text-right">Fatura</th><th class="text-right">Contrato</th>
+              <th class="text-right">DiferenÃ§a</th><th>Status</th><th>CompetÃªncia</th><th>Data</th>
             </tr></thead>
             <tbody>${rows}</tbody>
           </table>
@@ -1556,12 +1556,12 @@ const Relatorios = {
 };
 
 // -------------------------------------------------------
-// CONFIGURAÇÕES
+// CONFIGURAÃ‡Ã•ES
 // -------------------------------------------------------
 const Configuracoes = {
   async load() {
     const sec = document.getElementById('page-configuracoes');
-    sec.innerHTML = `<div class="page-header"><h1>Configurações</h1></div><div id="cfg-body"><div class="loading-inline"><div class="spinner-sm"></div></div></div>`;
+    sec.innerHTML = `<div class="page-header"><h1>ConfiguraÃ§Ãµes</h1></div><div id="cfg-body"><div class="loading-inline"><div class="spinner-sm"></div></div></div>`;
     try {
       const cfg = await API.get('/api/configuracoes');
       document.getElementById('cfg-body').innerHTML = this.html(cfg);
@@ -1576,15 +1576,15 @@ const Configuracoes = {
     const empresa = cfg.empresa_nome   || 'Auditoria Telecom';
     return `
       <div class="config-card">
-        <h3><i class="fas fa-sliders" style="color:var(--primary)"></i> Regras de Tolerância</h3>
+        <h3><i class="fas fa-sliders" style="color:var(--primary)"></i> Regras de TolerÃ¢ncia</h3>
         <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">
-          Define quando um valor é considerado "aproximado" ao invés de "divergente".
-          Valores dentro da tolerância aparecem em amarelo; fora, em vermelho.
+          Define quando um valor Ã© considerado "aproximado" ao invÃ©s de "divergente".
+          Valores dentro da tolerÃ¢ncia aparecem em amarelo; fora, em vermelho.
         </p>
         <form id="cfg-form" onsubmit="Configuracoes.save(event)">
           <div class="form-row">
             <div class="form-group">
-              <label>Tipo de Tolerância</label>
+              <label>Tipo de TolerÃ¢ncia</label>
               <div class="radio-group">
                 <label class="radio-label">
                   <input type="radio" name="tolerancia_tipo" value="percentual" ${tipo==='percentual'?'checked':''}>
@@ -1597,14 +1597,14 @@ const Configuracoes = {
               </div>
             </div>
             <div class="form-group">
-              <label id="tol-val-label">Valor da Tolerância (${tipo==='fixo'?'R$':'%'})</label>
+              <label id="tol-val-label">Valor da TolerÃ¢ncia (${tipo==='fixo'?'R$':'%'})</label>
               <input type="number" id="tolerancia_valor" name="tolerancia_valor" value="${U.esc(valor)}" step="0.1" min="0" placeholder="5.0">
-              <small class="text-muted">Ex: 5 = ±5${tipo==='fixo'?'%':'%'}  ou  1 = ±R$ 1,00</small>
+              <small class="text-muted">Ex: 5 = Â±5${tipo==='fixo'?'%':'%'}  ou  1 = Â±R$ 1,00</small>
             </div>
           </div>
 
           <div style="border-top:1px solid var(--border);padding-top:16px;margin-top:8px">
-            <h3 style="font-size:14px;font-weight:600;margin-bottom:12px"><i class="fas fa-building" style="color:var(--primary)"></i> Identificação da Empresa</h3>
+            <h3 style="font-size:14px;font-weight:600;margin-bottom:12px"><i class="fas fa-building" style="color:var(--primary)"></i> IdentificaÃ§Ã£o da Empresa</h3>
             <div class="form-group" style="max-width:360px">
               <label>Nome da Empresa</label>
               <input type="text" name="empresa_nome" value="${U.esc(empresa)}" placeholder="Nome da empresa">
@@ -1613,7 +1613,7 @@ const Configuracoes = {
 
           <div class="form-actions" style="border-top:1px solid var(--border);margin-top:16px">
             <button type="button" class="btn btn-ghost" onclick="Configuracoes.load()">Cancelar</button>
-            <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Salvar Configurações</button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Salvar ConfiguraÃ§Ãµes</button>
           </div>
         </form>
       </div>
@@ -1622,15 +1622,15 @@ const Configuracoes = {
         <h3><i class="fas fa-info-circle" style="color:var(--primary)"></i> Sobre o Sistema</h3>
         <div class="detail-field" style="padding:8px 0;border-bottom:1px solid var(--border)"><label>Sistema</label><span>AuditoriaTel v1.0</span></div>
         <div class="detail-field" style="padding:8px 0;border-bottom:1px solid var(--border)"><label>Banco de dados</label><span>SQLite local</span></div>
-        <div class="detail-field" style="padding:8px 0"><label>Extração de PDF</label><span>pdfminer.six + heurísticas</span></div>
+        <div class="detail-field" style="padding:8px 0"><label>ExtraÃ§Ã£o de PDF</label><span>pdfminer.six + heurÃ­sticas</span></div>
       </div>
 
       <div class="config-card" style="border:2px solid var(--danger)">
         <h3 style="color:var(--danger)"><i class="fas fa-triangle-exclamation" style="margin-right:6px"></i>Zona de Perigo</h3>
         <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">
-          Esta ação irá <strong>apagar todos os dados</strong> do sistema: contratos, contas, comparações,
-          faturas importadas, planos, cadastros e dados Coopernac. As configurações serão restauradas
-          para os valores padrão. <strong>Esta ação é irreversível.</strong>
+          Esta aÃ§Ã£o irÃ¡ <strong>apagar todos os dados</strong> do sistema: contratos, contas, comparaÃ§Ãµes,
+          faturas importadas, planos, cadastros e dados Coopernac. As configuraÃ§Ãµes serÃ£o restauradas
+          para os valores padrÃ£o. <strong>Esta aÃ§Ã£o Ã© irreversÃ­vel.</strong>
         </p>
         <button class="btn" style="background:var(--danger);color:#fff;border:none" onclick="Configuracoes.resetDB()">
           <i class="fas fa-trash-can"></i> Zerar Banco de Dados
@@ -1648,17 +1648,17 @@ const Configuracoes = {
       empresa_nome:     f.empresa_nome.value.trim(),
     };
     try {
-      U.loading(true, 'Salvando configurações...');
+      U.loading(true, 'Salvando configuraÃ§Ãµes...');
       await API.put('/api/configuracoes', data);
       U.loading(false);
-      U.toast('Configurações salvas com sucesso!');
+      U.toast('ConfiguraÃ§Ãµes salvas com sucesso!');
     } catch(err) { U.loading(false); U.toast(err.message,'error'); }
   },
 
   async resetDB() {
-    // Dupla confirmação
-    if (!confirm('ATENÇÃO: Todos os dados serão apagados permanentemente.\n\nDeseja continuar?')) return;
-    if (!confirm('TEM CERTEZA? Esta ação NÃO pode ser desfeita.\n\nClique OK para confirmar a exclusão de TODOS os dados.')) return;
+    // Dupla confirmaÃ§Ã£o
+    if (!confirm('ATENÃ‡ÃƒO: Todos os dados serÃ£o apagados permanentemente.\n\nDeseja continuar?')) return;
+    if (!confirm('TEM CERTEZA? Esta aÃ§Ã£o NÃƒO pode ser desfeita.\n\nClique OK para confirmar a exclusÃ£o de TODOS os dados.')) return;
 
     try {
       U.loading(true, 'Zerando banco de dados...');
@@ -1697,11 +1697,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Tolerância tipo change
+  // TolerÃ¢ncia tipo change
   document.addEventListener('change', e => {
     if (e.target.name === 'tolerancia_tipo') {
       const lbl = document.getElementById('tol-val-label');
-      if (lbl) lbl.textContent = `Valor da Tolerância (${e.target.value === 'fixo' ? 'R$' : '%'})`;
+      if (lbl) lbl.textContent = `Valor da TolerÃ¢ncia (${e.target.value === 'fixo' ? 'R$' : '%'})`;
     }
   });
 
@@ -1732,7 +1732,7 @@ const Cadastro = {
     </div>
     <div class="filter-bar">
       <div class="search-field"><i class="fas fa-search"></i>
-        <input id="cad-search" type="text" placeholder="Buscar por número, nome, matrícula ou plano...">
+        <input id="cad-search" type="text" placeholder="Buscar por nÃºmero, nome, matrÃ­cula ou plano...">
       </div>
       <select id="cad-empresa" class="select-filter" onchange="Cadastro.fetch()">
         <option value="">Todas as empresas</option>
@@ -1777,7 +1777,7 @@ const Cadastro = {
   table() {
     if (!this.items.length) {
       return U.emptyState('fa-address-book', 'Nenhuma linha cadastrada',
-        'Cadastre as linhas telefônicas com dados do funcionário e centro de custo.',
+        'Cadastre as linhas telefÃ´nicas com dados do funcionÃ¡rio e centro de custo.',
         `<button class="btn btn-primary" onclick="Cadastro.openForm()"><i class="fas fa-plus"></i> Nova Linha</button>`);
     }
 
@@ -1788,13 +1788,13 @@ const Cadastro = {
       const [statusLabel, statusCls] = statusMap[c.status_linha] || statusMap.em_uso;
       return `<tr>
         <td><span class="phone-number">${U.phone(c.numero_telefone)}</span></td>
-        <td>${U.esc(c.operadora || '—')}</td>
-        <td style="text-align:center">${c.vencimento || '—'}</td>
-        <td>${U.esc(c.nome_funcionario || '—')}</td>
-        <td>${U.esc(c.matricula_funcionario || '—')}</td>
-        <td>${U.esc(c.centro_custo || '—')}</td>
-        <td>${U.esc(c.plano || '—')}</td>
-        <td>${U.esc(c.empresa || '—')}</td>
+        <td>${U.esc(c.operadora || 'â€”')}</td>
+        <td style="text-align:center">${c.vencimento || 'â€”'}</td>
+        <td>${U.esc(c.nome_funcionario || 'â€”')}</td>
+        <td>${U.esc(c.matricula_funcionario || 'â€”')}</td>
+        <td>${U.esc(c.centro_custo || 'â€”')}</td>
+        <td>${U.esc(c.plano || 'â€”')}</td>
+        <td>${U.esc(c.empresa || 'â€”')}</td>
         <td class="text-right">${U.money(c.valor_contrato)}</td>
         <td class="text-right">${U.money(c.valor_fatura)}</td>
         <td class="text-right ${c.diferenca > 0.005 ? 'val-pos' : c.diferenca < -0.005 ? 'val-neg' : 'val-zero'}">${U.money(c.diferenca)}</td>
@@ -1815,10 +1815,10 @@ const Cadastro = {
       <div class="table-wrapper">
         <table class="data-table" style="font-size:12px">
           <thead><tr>
-            <th>Número</th><th>Operadora</th><th>Venc.</th><th>Funcionário</th><th>Matrícula</th>
+            <th>NÃºmero</th><th>Operadora</th><th>Venc.</th><th>FuncionÃ¡rio</th><th>MatrÃ­cula</th>
             <th>C. Custo</th><th>Plano</th><th>Empresa</th>
             <th class="text-right">V. Contrato</th><th class="text-right">V. Fatura</th>
-            <th class="text-right">Diferença</th><th>Status</th><th>Conferência</th><th></th>
+            <th class="text-right">DiferenÃ§a</th><th>Status</th><th>ConferÃªncia</th><th></th>
           </tr></thead>
           <tbody>${rows}</tbody>
         </table>
@@ -1834,7 +1834,7 @@ const Cadastro = {
       <h2 class="modal-title">${isEdit ? 'Editar' : 'Nova'} Linha</h2>
       <form id="cad-form" onsubmit="Cadastro.save(event, ${id || 'null'})">
         <div class="form-row">
-          <div class="form-group"><label>Número do Telefone *</label>
+          <div class="form-group"><label>NÃºmero do Telefone *</label>
             <input name="numero_telefone" type="text" required value="${U.esc(c.numero_telefone || '')}" placeholder="11999887766"></div>
           <div class="form-group"><label>Operadora</label>
             <select name="operadora" class="select-filter" style="width:100%">
@@ -1848,11 +1848,11 @@ const Cadastro = {
             <input name="vencimento" type="number" min="1" max="31" value="${c.vencimento || ''}" placeholder="15"></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>Nº da Conta</label>
+          <div class="form-group"><label>NÂº da Conta</label>
             <input name="numero_conta" type="text" value="${U.esc(c.numero_conta || '')}"></div>
-          <div class="form-group"><label>Matrícula Funcionário</label>
+          <div class="form-group"><label>MatrÃ­cula FuncionÃ¡rio</label>
             <input name="matricula_funcionario" type="text" value="${U.esc(c.matricula_funcionario || '')}"></div>
-          <div class="form-group"><label>Nome Funcionário</label>
+          <div class="form-group"><label>Nome FuncionÃ¡rio</label>
             <input name="nome_funcionario" type="text" value="${U.esc(c.nome_funcionario || '')}"></div>
         </div>
         <div class="form-row">
@@ -1874,7 +1874,7 @@ const Cadastro = {
             <input name="valor_contrato" type="number" step="0.01" value="${c.valor_contrato || ''}"></div>
           <div class="form-group"><label>Valor Fatura R$</label>
             <input name="valor_fatura" type="number" step="0.01" value="${c.valor_fatura || ''}"></div>
-          <div class="form-group"><label>Conferência</label>
+          <div class="form-group"><label>ConferÃªncia</label>
             <select name="conferencia" class="select-filter" style="width:100%">
               <option value="pendente" ${(c.conferencia||'pendente')==='pendente'?'selected':''}>Pendente</option>
               <option value="ok" ${c.conferencia==='ok'?'selected':''}>OK (Verde)</option>
@@ -1935,13 +1935,13 @@ const Cadastro = {
     if (!confirm('Excluir esta linha?')) return;
     try {
       await API.del(`/api/cadastro/${id}`);
-      U.toast('Linha excluída.');
+      U.toast('Linha excluÃ­da.');
       this.fetch();
     } catch(e) { U.toast(e.message, 'error'); }
   },
 
   async comparar() {
-    if (!confirm('Comparar todas as linhas do cadastro com as faturas importadas?\nIsso atualizará os valores de fatura, diferença e conferência.')) return;
+    if (!confirm('Comparar todas as linhas do cadastro com as faturas importadas?\nIsso atualizarÃ¡ os valores de fatura, diferenÃ§a e conferÃªncia.')) return;
     try {
       U.loading(true, 'Comparando com faturas...');
       const res = await API.post('/api/cadastro/comparar');
@@ -1984,11 +1984,11 @@ const Coopernac = {
       <!-- VOZ -->
       <div class="config-card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <h3 style="margin:0"><i class="fas fa-phone" style="color:#660099;margin-right:6px"></i>Voz</h3>
+          <h3 style="margin:0"><i class="fas fa-phone" style="color:#6B1D3A;margin-right:6px"></i>Voz</h3>
           <button class="btn btn-primary btn-sm" onclick="Coopernac.addItem('voz')"><i class="fas fa-plus"></i> Adicionar</button>
         </div>
         <table class="fatura-table">
-          <thead><tr><th>Número</th><th>Descrição</th><th style="text-align:right">Total R$</th><th style="width:60px"></th></tr></thead>
+          <thead><tr><th>NÃºmero</th><th>DescriÃ§Ã£o</th><th style="text-align:right">Total R$</th><th style="width:60px"></th></tr></thead>
           <tbody>${this.voz.map(v => `<tr>
             <td>${U.esc(v.numero)}</td><td>${U.esc(v.descricao)}</td>
             <td style="text-align:right">${U.money(v.total)}</td>
@@ -2005,11 +2005,11 @@ const Coopernac = {
       <!-- DADOS -->
       <div class="config-card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <h3 style="margin:0"><i class="fas fa-wifi" style="color:#660099;margin-right:6px"></i>Dados</h3>
+          <h3 style="margin:0"><i class="fas fa-wifi" style="color:#6B1D3A;margin-right:6px"></i>Dados</h3>
           <button class="btn btn-primary btn-sm" onclick="Coopernac.addItem('dados')"><i class="fas fa-plus"></i> Adicionar</button>
         </div>
         <table class="fatura-table">
-          <thead><tr><th>Número</th><th>Descrição</th><th style="text-align:right">Total R$</th><th style="width:60px"></th></tr></thead>
+          <thead><tr><th>NÃºmero</th><th>DescriÃ§Ã£o</th><th style="text-align:right">Total R$</th><th style="width:60px"></th></tr></thead>
           <tbody>${this.dados.map(v => `<tr>
             <td>${U.esc(v.numero)}</td><td>${U.esc(v.descricao)}</td>
             <td style="text-align:right">${U.money(v.total)}</td>
@@ -2026,11 +2026,11 @@ const Coopernac = {
       <!-- RESUMO -->
       <div class="config-card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <h3 style="margin:0"><i class="fas fa-calculator" style="color:#660099;margin-right:6px"></i>Resumo (Voz + Dados)</h3>
+          <h3 style="margin:0"><i class="fas fa-calculator" style="color:#6B1D3A;margin-right:6px"></i>Resumo (Voz + Dados)</h3>
           <button class="btn btn-primary btn-sm" onclick="Coopernac.addResumo()"><i class="fas fa-plus"></i> Adicionar</button>
         </div>
         <table class="fatura-table">
-          <thead><tr><th style="text-align:right">Valores R$</th><th>Descrição</th><th>Observação</th><th style="width:60px"></th></tr></thead>
+          <thead><tr><th style="text-align:right">Valores R$</th><th>DescriÃ§Ã£o</th><th>ObservaÃ§Ã£o</th><th style="width:60px"></th></tr></thead>
           <tbody>${this.resumo.map(r => `<tr>
             <td style="text-align:right">${U.money(r.valores)}</td><td>${U.esc(r.descricao)}</td><td>${U.esc(r.observacao || '')}</td>
             <td style="text-align:center">
@@ -2047,16 +2047,16 @@ const Coopernac = {
       <div class="cards-row" style="max-width:600px">
         <div class="summary-card"><span class="summary-label">Total Voz</span><span class="summary-value">${U.money(vozTotal)}</span></div>
         <div class="summary-card"><span class="summary-label">Total Dados</span><span class="summary-value">${U.money(dadosTotal)}</span></div>
-        <div class="summary-card"><span class="summary-label">Soma Geral</span><span class="summary-value" style="color:#660099;font-weight:700">${U.money(vozTotal + dadosTotal)}</span></div>
+        <div class="summary-card"><span class="summary-label">Soma Geral</span><span class="summary-value" style="color:#6B1D3A;font-weight:700">${U.money(vozTotal + dadosTotal)}</span></div>
       </div>`;
   },
 
   addItem(tipo) {
     U.modal(`
-      <h3>Novo registro — ${tipo === 'voz' ? 'Voz' : 'Dados'}</h3>
+      <h3>Novo registro â€” ${tipo === 'voz' ? 'Voz' : 'Dados'}</h3>
       <form id="coop-form" onsubmit="Coopernac.saveItem(event,'${tipo}')">
-        <div class="form-group"><label>Número</label><input name="numero" type="text" required></div>
-        <div class="form-group"><label>Descrição</label><input name="descricao" type="text"></div>
+        <div class="form-group"><label>NÃºmero</label><input name="numero" type="text" required></div>
+        <div class="form-group"><label>DescriÃ§Ã£o</label><input name="descricao" type="text"></div>
         <div class="form-group"><label>Total R$</label><input name="total" type="number" step="0.01" value="0"></div>
         <div class="form-actions">
           <button type="button" class="btn btn-ghost" onclick="U.closeModal()">Cancelar</button>
@@ -2070,10 +2070,10 @@ const Coopernac = {
     const item = list.find(v => v.id === id);
     if (!item) return;
     U.modal(`
-      <h3>Editar — ${tipo === 'voz' ? 'Voz' : 'Dados'}</h3>
+      <h3>Editar â€” ${tipo === 'voz' ? 'Voz' : 'Dados'}</h3>
       <form id="coop-form" onsubmit="Coopernac.saveItem(event,'${tipo}',${id})">
-        <div class="form-group"><label>Número</label><input name="numero" type="text" value="${U.esc(item.numero)}" required></div>
-        <div class="form-group"><label>Descrição</label><input name="descricao" type="text" value="${U.esc(item.descricao)}"></div>
+        <div class="form-group"><label>NÃºmero</label><input name="numero" type="text" value="${U.esc(item.numero)}" required></div>
+        <div class="form-group"><label>DescriÃ§Ã£o</label><input name="descricao" type="text" value="${U.esc(item.descricao)}"></div>
         <div class="form-group"><label>Total R$</label><input name="total" type="number" step="0.01" value="${item.total || 0}"></div>
         <div class="form-actions">
           <button type="button" class="btn btn-ghost" onclick="U.closeModal()">Cancelar</button>
@@ -2105,8 +2105,8 @@ const Coopernac = {
       <h3>Novo Resumo</h3>
       <form id="coop-res-form" onsubmit="Coopernac.saveResumo(event)">
         <div class="form-group"><label>Valores R$</label><input name="valores" type="number" step="0.01" value="0"></div>
-        <div class="form-group"><label>Descrição</label><input name="descricao" type="text"></div>
-        <div class="form-group"><label>Observação</label><input name="observacao" type="text"></div>
+        <div class="form-group"><label>DescriÃ§Ã£o</label><input name="descricao" type="text"></div>
+        <div class="form-group"><label>ObservaÃ§Ã£o</label><input name="observacao" type="text"></div>
         <div class="form-actions">
           <button type="button" class="btn btn-ghost" onclick="U.closeModal()">Cancelar</button>
           <button type="submit" class="btn btn-primary">Salvar</button>
@@ -2121,8 +2121,8 @@ const Coopernac = {
       <h3>Editar Resumo</h3>
       <form id="coop-res-form" onsubmit="Coopernac.saveResumo(event,${id})">
         <div class="form-group"><label>Valores R$</label><input name="valores" type="number" step="0.01" value="${item.valores || 0}"></div>
-        <div class="form-group"><label>Descrição</label><input name="descricao" type="text" value="${U.esc(item.descricao)}"></div>
-        <div class="form-group"><label>Observação</label><input name="observacao" type="text" value="${U.esc(item.observacao || '')}"></div>
+        <div class="form-group"><label>DescriÃ§Ã£o</label><input name="descricao" type="text" value="${U.esc(item.descricao)}"></div>
+        <div class="form-group"><label>ObservaÃ§Ã£o</label><input name="observacao" type="text" value="${U.esc(item.observacao || '')}"></div>
         <div class="form-actions">
           <button type="button" class="btn btn-ghost" onclick="U.closeModal()">Cancelar</button>
           <button type="submit" class="btn btn-primary">Salvar</button>
@@ -2150,7 +2150,7 @@ const Coopernac = {
 };
 
 // -------------------------------------------------------
-// FATURA PDF → XLS
+// FATURA PDF â†’ XLS
 // -------------------------------------------------------
 const FaturaXls = {
   state: { rows: [], meta: {}, filename: '', rawText: '' },
@@ -2163,14 +2163,14 @@ const FaturaXls = {
       <div class="page-header">
         <h1>Fatura PDF <i class="fas fa-arrow-right" style="font-size:14px"></i> Importar &amp; Comparar</h1>
         <p style="color:var(--text-secondary);font-size:13px;margin:4px 0 0">
-          Importe faturas Vivo, cadastre valores de contrato e audite divergências.
+          Importe faturas Vivo, cadastre valores de contrato e audite divergÃªncias.
         </p>
       </div>
 
-      <!-- Gestão de Planos -->
+      <!-- GestÃ£o de Planos -->
       <div class="fatura-xls-card" style="margin-bottom:20px">
         <h3 style="margin:0 0 12px;font-size:15px;font-weight:600">
-          <i class="fas fa-tags" style="color:#660099;margin-right:6px"></i>Valores dos Planos (Contrato)
+          <i class="fas fa-tags" style="color:#6B1D3A;margin-right:6px"></i>Valores dos Planos (Contrato)
         </h3>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px">
           <div style="flex:1;min-width:200px">
@@ -2193,7 +2193,7 @@ const FaturaXls = {
       <!-- Upload PDF -->
       <div class="fatura-xls-card">
         <h3 style="margin:0 0 12px;font-size:15px;font-weight:600">
-          <i class="fas fa-file-pdf" style="color:#660099;margin-right:6px"></i>Importar Fatura PDF
+          <i class="fas fa-file-pdf" style="color:#6B1D3A;margin-right:6px"></i>Importar Fatura PDF
         </h3>
         <div class="drop-zone" id="fxls-drop"
              onclick="document.getElementById('fxls-input').click()"
@@ -2203,7 +2203,7 @@ const FaturaXls = {
           <div class="dz-icon"><i class="fas fa-file-pdf"></i></div>
           <strong>Arraste a fatura PDF aqui</strong>
           <p>ou <u style="cursor:pointer">selecione o arquivo</u></p>
-          <p>PDF com texto selecionável &middot; até 100 MB (dividido automaticamente)</p>
+          <p>PDF com texto selecionÃ¡vel &middot; atÃ© 100 MB (dividido automaticamente)</p>
           <input type="file" id="fxls-input" accept=".pdf" style="display:none"
                  onchange="FaturaXls.onFileSelected(this.files[0])">
         </div>
@@ -2243,7 +2243,7 @@ const FaturaXls = {
     const nome  = (nomeEl.value || '').trim();
     const valor = parseFloat(valorEl.value);
     if (!nome) { U.toast('Informe o nome do plano.', 'error'); return; }
-    if (isNaN(valor) || valor < 0) { U.toast('Informe um valor válido.', 'error'); return; }
+    if (isNaN(valor) || valor < 0) { U.toast('Informe um valor vÃ¡lido.', 'error'); return; }
     try {
       await API.post('/api/planos', { nome_plano: nome, valor_contrato: valor });
       nomeEl.value = ''; valorEl.value = '';
@@ -2292,7 +2292,7 @@ const FaturaXls = {
       await API.del(`/api/planos/${id}`);
       await this.loadPlanos();
       document.getElementById('planos-table-wrap').innerHTML = this._planosTable();
-      U.toast('Plano excluído.');
+      U.toast('Plano excluÃ­do.');
     } catch(e) { U.toast(e.message, 'error'); }
   },
 
@@ -2320,10 +2320,10 @@ const FaturaXls = {
     const MAX_CHUNK = 3.5 * 1024 * 1024; // 3.5MB por chunk (margem para o limite de 4.5MB)
 
     if (file.size <= MAX_CHUNK) {
-      // Arquivo pequeno — upload direto
+      // Arquivo pequeno â€” upload direto
       await this._uploadSinglePdf(file, resultEl);
     } else {
-      // Arquivo grande — dividir em partes por páginas
+      // Arquivo grande â€” dividir em partes por pÃ¡ginas
       await this._uploadChunkedPdf(file, resultEl);
     }
   },
@@ -2332,7 +2332,7 @@ const FaturaXls = {
     resultEl.innerHTML = `
       <div style="display:flex;align-items:center;gap:10px;padding:20px 0;color:var(--text-secondary)">
         <div class="spinner-sm"></div>
-        <span>Lendo <strong>${U.esc(file.name)}</strong>…</span>
+        <span>Lendo <strong>${U.esc(file.name)}</strong>â€¦</span>
       </div>`;
 
     try {
@@ -2371,7 +2371,7 @@ const FaturaXls = {
     resultEl.innerHTML = `
       <div style="display:flex;align-items:center;gap:10px;padding:20px 0;color:var(--text-secondary)">
         <div class="spinner-sm"></div>
-        <span>Dividindo <strong>${U.esc(file.name)}</strong> (${(file.size / 1024 / 1024).toFixed(1)} MB) em partes…</span>
+        <span>Dividindo <strong>${U.esc(file.name)}</strong> (${(file.size / 1024 / 1024).toFixed(1)} MB) em partesâ€¦</span>
       </div>`;
 
     try {
@@ -2379,7 +2379,7 @@ const FaturaXls = {
       const pdfDoc = await PDFLib.PDFDocument.load(arrayBuf);
       const totalPages = pdfDoc.getPageCount();
 
-      // Descobrir quantas páginas por chunk (estimar ~tamanho/paginas)
+      // Descobrir quantas pÃ¡ginas por chunk (estimar ~tamanho/paginas)
       const avgPageSize = file.size / totalPages;
       const pagesPerChunk = Math.max(1, Math.floor(3.5 * 1024 * 1024 / avgPageSize));
 
@@ -2397,13 +2397,13 @@ const FaturaXls = {
         resultEl.innerHTML = `
           <div style="display:flex;align-items:center;gap:10px;padding:20px 0;color:var(--text-secondary)">
             <div class="spinner-sm"></div>
-            <span>Processando parte ${i + 1}/${chunks.length} (páginas ${start + 1}-${end} de ${totalPages})…</span>
+            <span>Processando parte ${i + 1}/${chunks.length} (pÃ¡ginas ${start + 1}-${end} de ${totalPages})â€¦</span>
           </div>
           <div style="background:var(--border);border-radius:6px;height:6px;margin-top:8px;overflow:hidden">
             <div style="background:var(--primary);height:100%;width:${Math.round(((i + 1) / chunks.length) * 100)}%;transition:width .3s"></div>
           </div>`;
 
-        // Criar sub-PDF com as páginas do chunk
+        // Criar sub-PDF com as pÃ¡ginas do chunk
         const chunkPdf = await PDFLib.PDFDocument.create();
         const pages = await chunkPdf.copyPages(pdfDoc, Array.from({ length: end - start }, (_, k) => start + k));
         pages.forEach(p => chunkPdf.addPage(p));
@@ -2432,7 +2432,7 @@ const FaturaXls = {
         }
       }
 
-      // Remover duplicatas por numero_vivo (caso páginas se sobreponham)
+      // Remover duplicatas por numero_vivo (caso pÃ¡ginas se sobreponham)
       const seen = new Set();
       const unique = [];
       allLinhas.forEach(l => {
@@ -2455,7 +2455,7 @@ const FaturaXls = {
         rawText:  '',
       };
       this.renderPreview(combined);
-      U.toast(`PDF dividido em ${chunks.length} partes. ${unique.length} linhas extraídas.`);
+      U.toast(`PDF dividido em ${chunks.length} partes. ${unique.length} linhas extraÃ­das.`);
     } catch (err) {
       resultEl.innerHTML = `<div class="alert alert-danger" style="margin-top:16px">
         <i class="fas fa-circle-exclamation"></i> ${U.esc(err.message)}
@@ -2492,7 +2492,7 @@ const FaturaXls = {
       const diff = (v != null && vContrato != null) ? (v - vContrato) : null;
       const diffHtml = diff != null
         ? `<span class="${Math.abs(diff) < 0.01 ? 'val-zero' : diff > 0 ? 'val-pos' : 'val-neg'}" style="font-size:12px;font-weight:600">${U.money(diff)}</span>`
-        : '<span style="font-size:11px;color:var(--text-secondary)">—</span>';
+        : '<span style="font-size:11px;color:var(--text-secondary)">â€”</span>';
       const statusHtml = diff != null
         ? (Math.abs(diff) < 0.01
           ? '<span class="badge badge-ok" style="font-size:10px"><i class="fas fa-circle-check"></i> OK</span>'
@@ -2507,7 +2507,7 @@ const FaturaXls = {
         <td class="right"><input type="number" step="0.01"
                    style="width:90px;font-size:12px;border:1px solid var(--border);border-radius:4px;padding:3px 6px;text-align:right"
                    value="${v != null ? v : ''}" onchange="FaturaXls.updateRow(${i},'valor_total',parseFloat(this.value)||null)"></td>
-        <td class="right" style="font-size:12px">${vContrato != null ? U.money(vContrato) : '—'}</td>
+        <td class="right" style="font-size:12px">${vContrato != null ? U.money(vContrato) : 'â€”'}</td>
         <td class="right">${diffHtml}</td>
         <td style="text-align:center">${statusHtml}</td>
         <td><button onclick="FaturaXls.removeRow(${i})" style="background:none;border:none;cursor:pointer;color:#e53e3e" title="Remover">
@@ -2518,9 +2518,9 @@ const FaturaXls = {
     const warning = nothingFound ? `
       <div class="alert alert-warning" style="margin-bottom:10px">
         <i class="fas fa-triangle-exclamation"></i>
-        <div><strong>Nenhum dado extraído automaticamente.</strong><br>
+        <div><strong>Nenhum dado extraÃ­do automaticamente.</strong><br>
         O PDF pode ser uma imagem escaneada.
-        <button class="btn-link" onclick="FaturaXls.toggleRaw()">Ver texto bruto extraído</button></div>
+        <button class="btn-link" onclick="FaturaXls.toggleRaw()">Ver texto bruto extraÃ­do</button></div>
       </div>
       <div id="fxls-raw-wrap" style="display:none;margin-bottom:12px">
         <textarea readonly style="width:100%;height:160px;font-family:monospace;font-size:11px;border:1px solid var(--border);border-radius:6px;padding:8px;background:#f8fafc;resize:vertical">${U.esc(this.state.rawText || '(nenhum texto encontrado)')}</textarea>
@@ -2529,14 +2529,14 @@ const FaturaXls = {
     resultEl.innerHTML = `
       ${warning}
       <div class="fatura-preview-header">
-        <h3><i class="fas fa-table" style="color:#660099"></i> Preview — ${U.esc(res.filename || this.state.filename)}</h3>
+        <h3><i class="fas fa-table" style="color:#6B1D3A"></i> Preview â€” ${U.esc(res.filename || this.state.filename)}</h3>
         <div class="fatura-meta-badges">${badges}</div>
       </div>
       <div class="fatura-table-wrap">
         <table class="fatura-table" id="fxls-table">
           <thead><tr>
-            <th>Número Vivo</th><th>Plano</th><th>Valor Fatura R$</th>
-            <th style="text-align:right">Valor Contrato</th><th style="text-align:right">Diferença</th><th>Status</th><th></th>
+            <th>NÃºmero Vivo</th><th>Plano</th><th>Valor Fatura R$</th>
+            <th style="text-align:right">Valor Contrato</th><th style="text-align:right">DiferenÃ§a</th><th>Status</th><th></th>
           </tr></thead>
           <tbody id="fxls-tbody">${trs}</tbody>
           <tfoot><tr>
@@ -2598,7 +2598,7 @@ const FaturaXls = {
     if (!rows.length) { U.toast('Nenhuma linha para importar.', 'error'); return; }
 
     const btn = document.getElementById('btn-importar');
-    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Importando…'; }
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Importandoâ€¦'; }
 
     try {
       const res = await API.post('/api/faturas/importar', {
@@ -2629,7 +2629,7 @@ const FaturaXls = {
               <i class="fas fa-circle-xmark"></i> Linhas Divergentes
             </h4>
             <table class="fatura-table">
-              <thead><tr><th>Número</th><th>Plano</th><th style="text-align:right">Fatura</th><th style="text-align:right">Contrato</th><th style="text-align:right">Diferença</th></tr></thead>
+              <thead><tr><th>NÃºmero</th><th>Plano</th><th style="text-align:right">Fatura</th><th style="text-align:right">Contrato</th><th style="text-align:right">DiferenÃ§a</th></tr></thead>
               <tbody>${divergentes.map(l => `<tr>
                 <td>${U.esc(l.numero_vivo)}</td>
                 <td>${U.esc(l.plano)}</td>
@@ -2653,7 +2653,7 @@ const FaturaXls = {
     if (!rows.length) { U.toast('Nenhuma linha para exportar.', 'error'); return; }
 
     const btn = document.querySelector('.btn.btn-outline');
-    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando…'; }
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerandoâ€¦'; }
 
     try {
       const r = await fetch('/api/faturas/xls-from-json', {

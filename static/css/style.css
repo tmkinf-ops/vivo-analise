@@ -1,5 +1,5 @@
-/* ============================================================
-   AUDITORIA TELECOM — Design System
+﻿/* ============================================================
+   AUDITORIA TELECOM â€” Design System
    ============================================================ */
 
 /* --------------------------------------------------
@@ -10,7 +10,7 @@
   --topbar-h: 60px;
   --sidebar-bg: #0f172a;
   --sidebar-hover: #1e293b;
-  --sidebar-active: #6366f1;
+  --sidebar-active: #6B1D3A;
   --sidebar-text: #94a3b8;
   --sidebar-text-active: #f1f5f9;
   --sidebar-border: #1e293b;
@@ -24,9 +24,9 @@
   --text-secondary: #64748b;
   --text-muted: #94a3b8;
 
-  --primary: #6366f1;
-  --primary-light: #eef2ff;
-  --primary-dark: #4f46e5;
+  --primary: #6B1D3A;
+  --primary-light: #f9e8ef;
+  --primary-dark: #521530;
 
   --success: #22c55e;
   --success-bg: #f0fdf4;
@@ -1619,7 +1619,7 @@ img { max-width: 100%; }
 .result-stat span { font-size: 11px; color: var(--text-muted); }
 
 /* --------------------------------------------------
-   Competência tag
+   CompetÃªncia tag
    -------------------------------------------------- */
 .comp-tag {
   display: inline-block;
@@ -1716,7 +1716,7 @@ img { max-width: 100%; }
 }
 
 /* ============================================================
-   FATURA PDF → XLS
+   FATURA PDF â†’ XLS
    ============================================================ */
 .fatura-xls-card {
   background: var(--surface);
@@ -1728,7 +1728,7 @@ img { max-width: 100%; }
 }
 
 .fatura-xls-card .drop-zone {
-  border: 2px dashed #660099;
+  border: 2px dashed #6B1D3A;
   border-radius: var(--radius-md);
   padding: 48px 24px;
   text-align: center;
@@ -1742,7 +1742,7 @@ img { max-width: 100%; }
 }
 .fatura-xls-card .drop-zone .dz-icon {
   font-size: 40px;
-  color: #660099;
+  color: #6B1D3A;
   margin-bottom: 10px;
 }
 .fatura-xls-card .drop-zone p { margin: 4px 0; color: var(--text-secondary); font-size: 13px; }
@@ -1760,7 +1760,7 @@ img { max-width: 100%; }
 .fatura-meta-badges { display: flex; gap: 8px; flex-wrap: wrap; }
 .fatura-meta-badge {
   background: #f3e8ff;
-  color: #660099;
+  color: #6B1D3A;
   border-radius: 20px;
   padding: 3px 12px;
   font-size: 11px;
@@ -1774,7 +1774,7 @@ img { max-width: 100%; }
   font-size: 13px;
 }
 .fatura-table th {
-  background: #660099;
+  background: #6B1D3A;
   color: #fff;
   font-weight: 600;
   padding: 8px 12px;
@@ -1790,7 +1790,7 @@ img { max-width: 100%; }
 .fatura-table td.right { text-align: right; font-variant-numeric: tabular-nums; }
 .fatura-table tfoot td {
   font-weight: 700;
-  border-top: 2px solid #660099;
+  border-top: 2px solid #6B1D3A;
   background: #f3e8ff;
 }
 
@@ -1801,7 +1801,7 @@ img { max-width: 100%; }
   flex-wrap: wrap;
 }
 .btn-vivo {
-  background: #660099;
+  background: #6B1D3A;
   color: #fff;
   border: none;
   border-radius: var(--radius-md);
