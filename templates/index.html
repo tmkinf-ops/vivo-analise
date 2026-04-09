@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auditoria Telecom</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div id="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon"><i class="fas fa-phone-volume"></i></div>
+        <div class="brand-text">
+          <span class="brand-name">AuditoriaTel</span>
+          <span class="brand-sub">Sistema de Controle</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-group">
+          <span class="nav-group-label">Principal</span>
+          <a class="nav-item active" data-page="dashboard" href="#">
+            <i class="fas fa-gauge-high"></i><span>Dashboard</span>
+          </a>
+        </div>
+        <div class="nav-group">
+          <span class="nav-group-label">Gestão</span>
+          <a class="nav-item" data-page="cadastro" href="#">
+            <i class="fas fa-address-book"></i><span>Cadastro de Linhas</span>
+          </a>
+          <a class="nav-item" data-page="contratos" href="#">
+            <i class="fas fa-file-signature"></i><span>Base de Contratos</span>
+          </a>
+          <a class="nav-item" data-page="upload-contas" href="#">
+            <i class="fas fa-file-invoice"></i><span>Upload de Contas</span>
+          </a>
+          <a class="nav-item" data-page="fatura-xls" href="#">
+            <i class="fas fa-file-excel"></i><span>Importar Faturas</span>
+          </a>
+          <a class="nav-item" data-page="coopernac" href="#">
+            <i class="fas fa-building-columns"></i><span>Coopernac</span>
+          </a>
+        </div>
+        <div class="nav-group">
+          <span class="nav-group-label">Auditoria</span>
+          <a class="nav-item" data-page="comparacoes" href="#">
+            <i class="fas fa-scale-balanced"></i><span>Conferência</span>
+          </a>
+          <a class="nav-item" data-page="historico" href="#">
+            <i class="fas fa-clock-rotate-left"></i><span>Histórico</span>
+          </a>
+          <a class="nav-item" data-page="relatorios" href="#">
+            <i class="fas fa-chart-column"></i><span>Relatórios</span>
+          </a>
+        </div>
+        <div class="nav-group">
+          <span class="nav-group-label">Sistema</span>
+          <a class="nav-item" data-page="configuracoes" href="#">
+            <i class="fas fa-sliders"></i><span>Configurações</span>
+          </a>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <span class="sidebar-version">v1.0 &middot; AuditoriaTel</span>
+      </div>
+    </aside>
+
+    <!-- Main wrapper -->
+    <div class="main-wrapper" id="main-wrapper">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="sidebar-toggle" id="sidebar-toggle" title="Recolher menu">
+            <i class="fas fa-bars"></i>
+          </button>
+          <div class="page-title" id="page-title">Dashboard</div>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-avatar">
+            <i class="fas fa-circle-user"></i>
+            <span>Administrador</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Page content -->
+      <main class="content-area">
+        <section id="page-dashboard"     class="page-section active"></section>
+        <section id="page-cadastro"      class="page-section"></section>
+        <section id="page-contratos"     class="page-section"></section>
+        <section id="page-upload-contas" class="page-section"></section>
+        <section id="page-fatura-xls"    class="page-section"></section>
+        <section id="page-coopernac"     class="page-section"></section>
+        <section id="page-comparacoes"   class="page-section"></section>
+        <section id="page-historico"     class="page-section"></section>
+        <section id="page-relatorios"    class="page-section"></section>
+        <section id="page-configuracoes" class="page-section"></section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Loading overlay -->
+  <div id="loading-overlay" class="loading-overlay hidden">
+    <div class="loading-box">
+      <div class="loading-spinner"></div>
+      <p id="loading-msg">Processando...</p>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal-backdrop" class="modal-backdrop hidden" onclick="modalBackdropClick(event)">
+    <div class="modal-box" id="modal-box">
+      <button class="modal-x" id="modal-x" onclick="U.closeModal()">
+        <i class="fas fa-xmark"></i>
+      </button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toasts" class="toasts"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
