@@ -136,6 +136,7 @@ class Conta(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     linha_telefone = db.Column(db.String(20), nullable=False, index=True)
     valor_fatura = db.Column(db.Float, nullable=False)
+    plano = db.Column(db.String(200))
     competencia = db.Column(db.String(7), index=True)  # YYYY-MM
     operadora = db.Column(db.String(100))
     numero_fatura = db.Column(db.String(100))
@@ -148,6 +149,7 @@ class Conta(db.Model):
             'id': self.id,
             'linha_telefone': self.linha_telefone,
             'valor_fatura': self.valor_fatura,
+            'plano': self.plano,
             'competencia': self.competencia,
             'operadora': self.operadora,
             'numero_fatura': self.numero_fatura,

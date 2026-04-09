@@ -251,6 +251,11 @@ class PDFExtractor:
 
     def _associate_phone_value(self, phone: str, lines: List[str]) -> Optional[float]:
         """Tenta associar um valor monetário a um número de telefone no texto."""
+        _, value = self._associate_phone_plan_value(phone, lines)
+        return value
+
+    def _associate_phone_plan_value(self, phone: str, lines: List[str]) -> tuple:
+        """Retorna (plano, valor) associados a um número de telefone no texto."""
         phone_digits = re.sub(r'\D', '', phone)
         suffix = phone_digits[-8:]
 
@@ -261,18 +266,26 @@ class PDFExtractor:
             if suffix in line_digits:
                 found_indices.append(i)
 
-        # Prioridade 1: valor na mesma linha (busca valor após o telefone)
+        # Prioridade 1: valor na mesma linha (busca texto entre telefone e valor)
         for i in found_indices:
             line = lines[i]
-            # Localiza posição do telefone na linha para capturar o valor correto
             for pattern in self.PHONE_PATTERNS:
                 for m in re.finditer(pattern, line):
                     m_digits = re.sub(r'\D', '', m.group())
                     if len(m_digits) >= 10 and suffix in m_digits:
                         after = line[m.end():]
+                        # Extrai plano: texto entre o telefone e o próximo valor ou telefone
                         money = self.find_money_values(after)
                         if money:
-                            return money[0]  # primeiro valor após o telefone
+                            # O plano é o texto entre o telefone e o valor monetário
+                            money_match = re.search(
+                                r'([\d]{1,3}(?:\.[\d]{3})*,[\d]{2})', after)
+                            if money_match:
+                                plano = after[:money_match.start()].strip()
+                                # Limpa prefixos/sufixos comuns
+                                plano = re.sub(r'^[\s\-:]+|[\s\-:]+$', '', plano)
+                                return (plano or '', money[0])
+                            return ('', money[0])
                         break
 
         # Prioridade 2: valor nas próximas 3 linhas
@@ -280,9 +293,9 @@ class PDFExtractor:
             for j in range(i + 1, min(len(lines), i + 4)):
                 money = self.find_money_values(lines[j])
                 if money:
-                    return money[-1]
+                    return ('', money[-1])
 
-        return None
+        return ('', None)
 
     def _extract_from_tables(self, tables: List, contract_number: Optional[str],
                               client_name: Optional[str], operator: Optional[str],
@@ -413,10 +426,11 @@ class PDFExtractor:
             if phone in processed:
                 continue
             processed.add(phone)
-            value = self._associate_phone_value(phone, lines)
+            plano, value = self._associate_phone_plan_value(phone, lines)
             results.append({
                 'linha_telefone': phone,
                 'valor_fatura':   value,
+                'plano':          plano or '',
                 'competencia':    competencia   or '',
                 'operadora':      operator      or '',
                 'numero_fatura':  numero_fatura or '',
@@ -444,6 +458,7 @@ class PDFExtractor:
                         results.append({
                             'linha_telefone': p,
                             'valor_fatura':   chunk_money[-1] if chunk_money else None,
+                            'plano':          '',
                             'competencia':    competencia   or '',
                             'operadora':      operator      or '',
                             'numero_fatura':  numero_fatura or '',

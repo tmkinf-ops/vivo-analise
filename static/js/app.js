@@ -984,7 +984,7 @@ const UploadContas = {
   },
 
   addRow() {
-    S.uploadConta.rows.push({ linha_telefone:'', valor_fatura:'', competencia:'', operadora:'', numero_fatura:'' });
+    S.uploadConta.rows.push({ linha_telefone:'', plano:'', valor_fatura:'', competencia:'', operadora:'', numero_fatura:'' });
     document.getElementById('uc-body').innerHTML = this.step2();
   },
 
@@ -998,6 +998,7 @@ const UploadContas = {
     if (!tbody) return [];
     return Array.from(tbody.rows).map(row => ({
       linha_telefone: row.querySelector('[name="linha_telefone"]')?.value.trim() || '',
+      plano:          row.querySelector('[name="plano"]')?.value.trim()   || '',
       valor_fatura:   row.querySelector('[name="valor_fatura"]')?.value   || '',
       competencia:    row.querySelector('[name="competencia"]')?.value.trim() || '',
       operadora:      row.querySelector('[name="operadora"]')?.value.trim()   || '',

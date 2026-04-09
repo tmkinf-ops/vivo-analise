@@ -465,6 +465,7 @@ def save_contas_lote():
             c = Conta(
                 linha_telefone=re.sub(r'\D', '', str(row['linha_telefone'])),
                 valor_fatura=valor,
+                plano=row.get('plano') or None,
                 competencia=row.get('competencia') or None,
                 operadora=row.get('operadora') or None,
                 numero_fatura=row.get('numero_fatura') or None,
