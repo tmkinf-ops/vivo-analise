@@ -252,27 +252,36 @@ class PDFExtractor:
     def _associate_phone_value(self, phone: str, lines: List[str]) -> Optional[float]:
         """Tenta associar um valor monetário a um número de telefone no texto."""
         phone_digits = re.sub(r'\D', '', phone)
-        # Tenta casar com os últimos 8 dígitos do número
         suffix = phone_digits[-8:]
 
+        # Coleta todas as linhas onde o telefone aparece
+        found_indices = []
         for i, line in enumerate(lines):
             line_digits = re.sub(r'\D', '', line)
             if suffix in line_digits:
-                # Valor na mesma linha
-                money = self.find_money_values(line)
+                found_indices.append(i)
+
+        # Prioridade 1: valor na mesma linha (busca valor após o telefone)
+        for i in found_indices:
+            line = lines[i]
+            # Localiza posição do telefone na linha para capturar o valor correto
+            for pattern in self.PHONE_PATTERNS:
+                for m in re.finditer(pattern, line):
+                    m_digits = re.sub(r'\D', '', m.group())
+                    if len(m_digits) >= 10 and suffix in m_digits:
+                        after = line[m.end():]
+                        money = self.find_money_values(after)
+                        if money:
+                            return money[0]  # primeiro valor após o telefone
+                        break
+
+        # Prioridade 2: valor nas próximas 3 linhas
+        for i in found_indices:
+            for j in range(i + 1, min(len(lines), i + 4)):
+                money = self.find_money_values(lines[j])
                 if money:
                     return money[-1]
-                # Próximas 5 linhas
-                for j in range(i + 1, min(len(lines), i + 6)):
-                    money = self.find_money_values(lines[j])
-                    if money:
-                        return money[-1]
-                # Linhas anteriores (até 3)
-                for j in range(max(0, i - 3), i):
-                    money = self.find_money_values(lines[j])
-                    if money:
-                        return money[-1]
-                break
+
         return None
 
     def _extract_from_tables(self, tables: List, contract_number: Optional[str],
