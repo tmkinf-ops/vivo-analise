@@ -844,6 +844,7 @@ img { max-width: 100%; }
 .badge-sem_contrato{ background: var(--info-bg);    color: var(--info-text);    border: 1px solid var(--info-border); }
 .badge-sem_fatura  { background: var(--gray-bg);    color: var(--gray);         border: 1px solid var(--gray-border); }
 .badge-ambiguo     { background: var(--orange-bg);  color: #c2410c;             border: 1px solid #fed7aa; }
+.badge-sem-contrato{ background: #fee2e2;           color: #991b1b;             border: 1px solid #fca5a5; }
 
 /* --------------------------------------------------
    Chips

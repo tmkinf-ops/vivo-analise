@@ -822,7 +822,7 @@ const UploadContas = {
           <i class="fas fa-file-invoice dropzone-icon" style="color:var(--primary)"></i>
           <h3>Arraste a conta/fatura telefônica aqui</h3>
           <p>ou <button class="btn-link" onclick="document.getElementById('uc-file').click()">selecione o arquivo PDF</button></p>
-          <p class="text-muted text-sm">O sistema irá extrair automaticamente as linhas e valores · PDF até 50 MB</p>
+          <p class="text-muted text-sm">O sistema irá extrair automaticamente as linhas e valores · PDF até 100 MB</p>
         </div>
         <div class="alert alert-info" style="margin-top:14px">
           <i class="fas fa-circle-info"></i>
@@ -860,17 +860,65 @@ const UploadContas = {
   async processUpload(file) {
     S.uploadConta.file = file;
     S.uploadConta.filename = file.name;
-    document.getElementById('uc-body').innerHTML = `<div class="loading-inline"><div class="spinner-sm"></div> Extraindo dados da conta <b>${U.esc(file.name)}</b>...</div>`;
-    try {
-      const res = await API.upload('/api/contas/upload-pdf', file);
-      S.uploadConta.rows     = res.extracted || [];
-      S.uploadConta.filename = res.filename  || file.name;
-      S.uploadConta.rawText  = res.raw_text  || '';
-      this.setStep(2);
-      document.getElementById('uc-body').innerHTML = this.step2();
-    } catch(e) {
-      document.getElementById('uc-body').innerHTML = `<div class="alert alert-error" style="max-width:600px;margin:0 auto"><i class="fas fa-triangle-exclamation"></i> ${e.message}</div>` + `<div style="max-width:600px;margin:12px auto">${this.step1()}</div>`;
-      this.bindDropzone();
+    const MAX_CHUNK = 3.5 * 1024 * 1024;
+
+    if (file.size <= MAX_CHUNK) {
+      // Upload direto
+      document.getElementById('uc-body').innerHTML = `<div class="loading-inline"><div class="spinner-sm"></div> Extraindo dados da conta <b>${U.esc(file.name)}</b>...</div>`;
+      try {
+        const res = await API.upload('/api/contas/upload-pdf', file);
+        S.uploadConta.rows     = res.extracted || [];
+        S.uploadConta.filename = res.filename  || file.name;
+        S.uploadConta.rawText  = res.raw_text  || '';
+        this.setStep(2);
+        document.getElementById('uc-body').innerHTML = this.step2();
+      } catch(e) {
+        document.getElementById('uc-body').innerHTML = `<div class="alert alert-error" style="max-width:600px;margin:0 auto"><i class="fas fa-triangle-exclamation"></i> ${e.message}</div>` + `<div style="max-width:600px;margin:12px auto">${this.step1()}</div>`;
+        this.bindDropzone();
+      }
+    } else {
+      // Dividir PDF grande em partes
+      document.getElementById('uc-body').innerHTML = `<div class="loading-inline"><div class="spinner-sm"></div> Dividindo <b>${U.esc(file.name)}</b> (${(file.size/1024/1024).toFixed(1)} MB)...</div>`;
+      try {
+        const arrayBuf = await file.arrayBuffer();
+        const pdfDoc = await PDFLib.PDFDocument.load(arrayBuf);
+        const totalPages = pdfDoc.getPageCount();
+        const avgPageSize = file.size / totalPages;
+        const pagesPerChunk = Math.max(1, Math.floor(3.5 * 1024 * 1024 / avgPageSize));
+
+        const chunks = [];
+        for (let start = 0; start < totalPages; start += pagesPerChunk) {
+          chunks.push({ start, end: Math.min(start + pagesPerChunk, totalPages) });
+        }
+
+        let allExtracted = [];
+        for (let i = 0; i < chunks.length; i++) {
+          const { start, end } = chunks[i];
+          document.getElementById('uc-body').innerHTML = `<div class="loading-inline"><div class="spinner-sm"></div> Parte ${i+1}/${chunks.length} (pág. ${start+1}-${end})...</div>
+            <div style="background:var(--border);border-radius:6px;height:6px;margin:12px auto;max-width:400px;overflow:hidden">
+              <div style="background:var(--primary);height:100%;width:${Math.round(((i+1)/chunks.length)*100)}%;transition:width .3s"></div>
+            </div>`;
+
+          const chunkPdf = await PDFLib.PDFDocument.create();
+          const pages = await chunkPdf.copyPages(pdfDoc, Array.from({length: end-start}, (_,k) => start+k));
+          pages.forEach(p => chunkPdf.addPage(p));
+          const chunkBytes = await chunkPdf.save();
+          const blob = new Blob([chunkBytes], {type:'application/pdf'});
+          const chunkFile = new File([blob], `${file.name}_p${i+1}.pdf`, {type:'application/pdf'});
+
+          const res = await API.upload('/api/contas/upload-pdf', chunkFile);
+          if (res.extracted) allExtracted = allExtracted.concat(res.extracted);
+        }
+
+        S.uploadConta.rows = allExtracted;
+        S.uploadConta.rawText = '';
+        this.setStep(2);
+        document.getElementById('uc-body').innerHTML = this.step2();
+        U.toast(`PDF dividido em ${chunks.length} partes. ${allExtracted.length} linhas extraídas.`);
+      } catch(e) {
+        document.getElementById('uc-body').innerHTML = `<div class="alert alert-error" style="max-width:600px;margin:0 auto"><i class="fas fa-triangle-exclamation"></i> ${e.message}</div>` + `<div style="max-width:600px;margin:12px auto">${this.step1()}</div>`;
+        this.bindDropzone();
+      }
     }
   },
 
@@ -1682,6 +1730,13 @@ const Cadastro = {
       <select id="cad-empresa" class="select-filter" onchange="Cadastro.fetch()">
         <option value="">Todas as empresas</option>
       </select>
+      <select id="cad-status" class="select-filter" onchange="Cadastro.fetch()">
+        <option value="">Todos os status</option>
+        <option value="em_uso">Em Uso</option>
+        <option value="bloqueado">Bloqueado</option>
+        <option value="suspenso_120">Suspenso 120 Dias</option>
+        <option value="cancelado">Cancelado</option>
+      </select>
     </div>
     <div id="cad-body"><div class="loading-inline"><div class="spinner-sm"></div></div></div>`;
 
@@ -1700,10 +1755,11 @@ const Cadastro = {
   async fetch() {
     const search = document.getElementById('cad-search')?.value || '';
     const empresa = document.getElementById('cad-empresa')?.value || '';
+    const status_linha = document.getElementById('cad-status')?.value || '';
     const body = document.getElementById('cad-body');
 
     try {
-      const url = `/api/cadastro?search=${encodeURIComponent(search)}&empresa=${encodeURIComponent(empresa)}`;
+      const url = `/api/cadastro?search=${encodeURIComponent(search)}&empresa=${encodeURIComponent(empresa)}&status_linha=${encodeURIComponent(status_linha)}`;
       this.items = await API.get(url);
       body.innerHTML = this.table();
     } catch(e) {
@@ -1721,6 +1777,8 @@ const Cadastro = {
     const rows = this.items.map(c => {
       const confCls = c.conferencia === 'ok' ? 'badge-ok' : c.conferencia === 'divergente' ? 'badge-divergente' : 'badge-aproximado';
       const confLabel = c.conferencia === 'ok' ? 'OK' : c.conferencia === 'divergente' ? 'Divergente' : 'Pendente';
+      const statusMap = { em_uso: ['Em Uso','badge-ok'], bloqueado: ['Bloqueado','badge-aproximado'], suspenso_120: ['Suspenso 120d','badge-divergente'], cancelado: ['Cancelado','badge-sem-contrato'] };
+      const [statusLabel, statusCls] = statusMap[c.status_linha] || statusMap.em_uso;
       return `<tr>
         <td><span class="phone-number">${U.phone(c.numero_telefone)}</span></td>
         <td>${U.esc(c.operadora || '—')}</td>
@@ -1733,6 +1791,7 @@ const Cadastro = {
         <td class="text-right">${U.money(c.valor_contrato)}</td>
         <td class="text-right">${U.money(c.valor_fatura)}</td>
         <td class="text-right ${c.diferenca > 0.005 ? 'val-pos' : c.diferenca < -0.005 ? 'val-neg' : 'val-zero'}">${U.money(c.diferenca)}</td>
+        <td><span class="badge ${statusCls}">${statusLabel}</span></td>
         <td><span class="badge ${confCls}">${confLabel}</span></td>
         <td style="white-space:nowrap">
           <button onclick="Cadastro.openForm(${c.id})" style="background:none;border:none;cursor:pointer;color:var(--primary)" title="Editar">
@@ -1752,7 +1811,7 @@ const Cadastro = {
             <th>Número</th><th>Operadora</th><th>Venc.</th><th>Funcionário</th><th>Matrícula</th>
             <th>C. Custo</th><th>Plano</th><th>Empresa</th>
             <th class="text-right">V. Contrato</th><th class="text-right">V. Fatura</th>
-            <th class="text-right">Diferença</th><th>Conferência</th><th></th>
+            <th class="text-right">Diferença</th><th>Status</th><th>Conferência</th><th></th>
           </tr></thead>
           <tbody>${rows}</tbody>
         </table>
@@ -1815,6 +1874,15 @@ const Cadastro = {
               <option value="divergente" ${c.conferencia==='divergente'?'selected':''}>Divergente (Vermelho)</option>
             </select></div>
         </div>
+        <div class="form-row">
+          <div class="form-group"><label>Status da Linha</label>
+            <select name="status_linha" class="select-filter" style="width:100%">
+              <option value="em_uso" ${(c.status_linha||'em_uso')==='em_uso'?'selected':''}>Em Uso</option>
+              <option value="bloqueado" ${c.status_linha==='bloqueado'?'selected':''}>Bloqueado</option>
+              <option value="suspenso_120" ${c.status_linha==='suspenso_120'?'selected':''}>Suspenso 120 Dias</option>
+              <option value="cancelado" ${c.status_linha==='cancelado'?'selected':''}>Cancelado</option>
+            </select></div>
+        </div>
         <div class="form-actions">
           <button type="button" class="btn btn-ghost" onclick="U.closeModal()">Cancelar</button>
           <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> ${isEdit ? 'Salvar' : 'Cadastrar'}</button>
@@ -1841,6 +1909,7 @@ const Cadastro = {
       valor_contrato: f.valor_contrato.value || null,
       valor_fatura: f.valor_fatura.value || null,
       conferencia: f.conferencia.value,
+      status_linha: f.status_linha.value,
     };
     try {
       if (id) {
@@ -2127,7 +2196,7 @@ const FaturaXls = {
           <div class="dz-icon"><i class="fas fa-file-pdf"></i></div>
           <strong>Arraste a fatura PDF aqui</strong>
           <p>ou <u style="cursor:pointer">selecione o arquivo</u></p>
-          <p>PDF com texto selecionável &middot; até 50 MB</p>
+          <p>PDF com texto selecionável &middot; até 100 MB (dividido automaticamente)</p>
           <input type="file" id="fxls-input" accept=".pdf" style="display:none"
                  onchange="FaturaXls.onFileSelected(this.files[0])">
         </div>
@@ -2241,6 +2310,18 @@ const FaturaXls = {
       U.toast('Selecione um arquivo PDF.', 'error'); return;
     }
     const resultEl = document.getElementById('fxls-result');
+    const MAX_CHUNK = 3.5 * 1024 * 1024; // 3.5MB por chunk (margem para o limite de 4.5MB)
+
+    if (file.size <= MAX_CHUNK) {
+      // Arquivo pequeno — upload direto
+      await this._uploadSinglePdf(file, resultEl);
+    } else {
+      // Arquivo grande — dividir em partes por páginas
+      await this._uploadChunkedPdf(file, resultEl);
+    }
+  },
+
+  async _uploadSinglePdf(file, resultEl) {
     resultEl.innerHTML = `
       <div style="display:flex;align-items:center;gap:10px;padding:20px 0;color:var(--text-secondary)">
         <div class="spinner-sm"></div>
@@ -2272,6 +2353,102 @@ const FaturaXls = {
         rawText:  res.raw_text || '',
       };
       this.renderPreview(res);
+    } catch (err) {
+      resultEl.innerHTML = `<div class="alert alert-danger" style="margin-top:16px">
+        <i class="fas fa-circle-exclamation"></i> ${U.esc(err.message)}
+      </div>`;
+    }
+  },
+
+  async _uploadChunkedPdf(file, resultEl) {
+    resultEl.innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px;padding:20px 0;color:var(--text-secondary)">
+        <div class="spinner-sm"></div>
+        <span>Dividindo <strong>${U.esc(file.name)}</strong> (${(file.size / 1024 / 1024).toFixed(1)} MB) em partes…</span>
+      </div>`;
+
+    try {
+      const arrayBuf = await file.arrayBuffer();
+      const pdfDoc = await PDFLib.PDFDocument.load(arrayBuf);
+      const totalPages = pdfDoc.getPageCount();
+
+      // Descobrir quantas páginas por chunk (estimar ~tamanho/paginas)
+      const avgPageSize = file.size / totalPages;
+      const pagesPerChunk = Math.max(1, Math.floor(3.5 * 1024 * 1024 / avgPageSize));
+
+      const chunks = [];
+      for (let start = 0; start < totalPages; start += pagesPerChunk) {
+        const end = Math.min(start + pagesPerChunk, totalPages);
+        chunks.push({ start, end });
+      }
+
+      let allLinhas = [];
+      let lastMeta = {};
+
+      for (let i = 0; i < chunks.length; i++) {
+        const { start, end } = chunks[i];
+        resultEl.innerHTML = `
+          <div style="display:flex;align-items:center;gap:10px;padding:20px 0;color:var(--text-secondary)">
+            <div class="spinner-sm"></div>
+            <span>Processando parte ${i + 1}/${chunks.length} (páginas ${start + 1}-${end} de ${totalPages})…</span>
+          </div>
+          <div style="background:var(--border);border-radius:6px;height:6px;margin-top:8px;overflow:hidden">
+            <div style="background:var(--primary);height:100%;width:${Math.round(((i + 1) / chunks.length) * 100)}%;transition:width .3s"></div>
+          </div>`;
+
+        // Criar sub-PDF com as páginas do chunk
+        const chunkPdf = await PDFLib.PDFDocument.create();
+        const pages = await chunkPdf.copyPages(pdfDoc, Array.from({ length: end - start }, (_, k) => start + k));
+        pages.forEach(p => chunkPdf.addPage(p));
+        const chunkBytes = await chunkPdf.save();
+
+        const blob = new Blob([chunkBytes], { type: 'application/pdf' });
+        const chunkFile = new File([blob], `${file.name}_parte${i + 1}.pdf`, { type: 'application/pdf' });
+
+        const fd = new FormData();
+        fd.append('file', chunkFile);
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 120000);
+        try {
+          const r = await fetch('/api/faturas/pdf-preview', { method: 'POST', body: fd, signal: ctrl.signal });
+          clearTimeout(timer);
+          const res = await r.json().catch(() => ({}));
+          if (!r.ok) throw new Error(res.error || `Erro HTTP ${r.status}`);
+          if (res.linhas) allLinhas = allLinhas.concat(res.linhas);
+          if (res.competencia) lastMeta.competencia = res.competencia;
+          if (res.operadora) lastMeta.operadora = res.operadora;
+          if (res.numero_fatura) lastMeta.numero_fatura = res.numero_fatura;
+        } catch (ex) {
+          clearTimeout(timer);
+          if (ex.name === 'AbortError') throw new Error(`Timeout na parte ${i + 1}`);
+          throw ex;
+        }
+      }
+
+      // Remover duplicatas por numero_vivo (caso páginas se sobreponham)
+      const seen = new Set();
+      const unique = [];
+      allLinhas.forEach(l => {
+        const key = (l.numero_vivo || '') + '|' + (l.plano || '');
+        if (!seen.has(key)) { seen.add(key); unique.push(l); }
+      });
+
+      const combined = {
+        linhas: unique,
+        competencia: lastMeta.competencia,
+        operadora: lastMeta.operadora,
+        numero_fatura: lastMeta.numero_fatura,
+        filename: file.name,
+      };
+
+      this.state = {
+        rows:     unique,
+        meta:     lastMeta,
+        filename: file.name,
+        rawText:  '',
+      };
+      this.renderPreview(combined);
+      U.toast(`PDF dividido em ${chunks.length} partes. ${unique.length} linhas extraídas.`);
     } catch (err) {
       resultEl.innerHTML = `<div class="alert alert-danger" style="margin-top:16px">
         <i class="fas fa-circle-exclamation"></i> ${U.esc(err.message)}

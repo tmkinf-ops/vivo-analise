@@ -218,6 +218,7 @@ class CadastroLinha(db.Model):
     valor_plano = db.Column(db.Float)
     empresa = db.Column(db.String(300))  # nome da unidade
     conferencia = db.Column(db.String(20), default='pendente')  # ok | divergente | pendente
+    status_linha = db.Column(db.String(30), default='em_uso')  # em_uso | bloqueado | suspenso_120 | cancelado
     valor_contrato = db.Column(db.Float)
     valor_fatura = db.Column(db.Float)
     diferenca = db.Column(db.Float)
@@ -238,6 +239,7 @@ class CadastroLinha(db.Model):
             'valor_plano': self.valor_plano,
             'empresa': self.empresa,
             'conferencia': self.conferencia,
+            'status_linha': self.status_linha,
             'valor_contrato': self.valor_contrato,
             'valor_fatura': self.valor_fatura,
             'diferenca': self.diferenca,

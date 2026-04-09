@@ -1156,6 +1156,7 @@ def alertas_vencimento():
 def list_cadastro():
     search = request.args.get('search', '').strip()
     empresa = request.args.get('empresa', '').strip()
+    status_linha = request.args.get('status_linha', '').strip()
     query = CadastroLinha.query
 
     if search:
@@ -1168,6 +1169,8 @@ def list_cadastro():
         ))
     if empresa:
         query = query.filter(CadastroLinha.empresa.ilike(f'%{empresa}%'))
+    if status_linha:
+        query = query.filter(CadastroLinha.status_linha == status_linha)
 
     items = query.order_by(CadastroLinha.nome_funcionario).all()
     return jsonify([c.to_dict() for c in items])
@@ -1215,6 +1218,7 @@ def create_cadastro():
         valor_plano=float(data['valor_plano']) if data.get('valor_plano') else None,
         empresa=(data.get('empresa') or '').strip() or None,
         conferencia=data.get('conferencia') or conferencia,
+        status_linha=data.get('status_linha', 'em_uso'),
         valor_contrato=float(valor_contrato) if valor_contrato is not None else None,
         valor_fatura=float(valor_fatura) if valor_fatura is not None else None,
         diferenca=diferenca,
@@ -1247,6 +1251,8 @@ def update_cadastro(cid):
                 pass
     if 'conferencia' in data:
         c.conferencia = data['conferencia']
+    if 'status_linha' in data:
+        c.status_linha = data['status_linha']
 
     # Auto-buscar valor_contrato pelo plano
     if c.valor_contrato is None and c.plano:
