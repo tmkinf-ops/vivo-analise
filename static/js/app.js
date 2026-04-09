@@ -951,6 +951,7 @@ const UploadContas = {
     const tableRows = rows.map((r, i) => `
       <tr id="uc-row-${i}">
         <td><input name="linha_telefone" value="${U.esc(r.linha_telefone||'')}" placeholder="(11)99999-9999" required></td>
+        <td><input name="plano" value="${U.esc(r.plano||'')}" placeholder="Plano"></td>
         <td><input type="number" name="valor_fatura" value="${r.valor_fatura??''}" step="0.01" placeholder="0.00" required></td>
         <td><input name="competencia" value="${U.esc(r.competencia||'')}" placeholder="2025-01"></td>
         <td><input name="operadora" value="${U.esc(r.operadora||'')}" placeholder="Vivo"></td>
@@ -967,7 +968,7 @@ const UploadContas = {
       ${hint}
       <div class="preview-table-wrap">
         <table class="preview-table" id="uc-preview-table">
-          <thead><tr><th>Linha *</th><th>Valor Fatura *</th><th>Competência</th><th>Operadora</th><th>Nº Fatura</th><th></th></tr></thead>
+          <thead><tr><th>Linha *</th><th>Plano</th><th>Valor Fatura *</th><th>Competência</th><th>Operadora</th><th>Nº Fatura</th><th></th></tr></thead>
           <tbody>${tableRows}</tbody>
         </table>
       </div>
