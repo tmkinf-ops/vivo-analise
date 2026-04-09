@@ -1,1 +1,8 @@
 .vercel
+__pycache__/
+*.pyc
+*.db
+uploads/contas/*
+uploads/contratos/*
+!uploads/contas/.gitkeep
+!uploads/contratos/.gitkeep
