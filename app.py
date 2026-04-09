@@ -23,12 +23,9 @@ IS_RENDER = os.environ.get('RENDER', False)
 
 # Na Vercel, o filesystem é read-only exceto /tmp
 # No Render, usamos disco persistente montado em /opt/render/project/data
-if IS_VERCEL:
+if IS_VERCEL or IS_RENDER:
     DB_DIR = '/tmp'
     UPLOAD_DIR = '/tmp/uploads'
-elif IS_RENDER:
-    DB_DIR = '/opt/render/project/data'
-    UPLOAD_DIR = '/opt/render/project/data/uploads'
 else:
     DB_DIR = BASE_DIR
     UPLOAD_DIR = os.path.join(BASE_DIR, 'uploads')
@@ -70,21 +67,21 @@ def init_db():
         db.session.commit()
 
 
-# Na Vercel (serverless), inicializar o DB a cada cold start
-if IS_VERCEL:
-    _vercel_db_initialized = False
+# Em ambientes cloud, inicializar o DB automaticamente
+if IS_VERCEL or IS_RENDER:
+    _cloud_db_initialized = False
 
     @app.before_request
     def _ensure_db():
-        global _vercel_db_initialized
-        if not _vercel_db_initialized:
+        global _cloud_db_initialized
+        if not _cloud_db_initialized:
             init_db()
-            _vercel_db_initialized = True
+            _cloud_db_initialized = True
 
 
 @app.errorhandler(413)
 def request_entity_too_large(error):
-    limit = '4 MB (limite da Vercel)' if IS_VERCEL else '50 MB'
+    limit = '4 MB (limite da Vercel)' if IS_VERCEL else '100 MB'
     return jsonify({'error': f'Arquivo muito grande. Limite máximo: {limit}'}), 413
 
 

@@ -9,7 +9,3 @@ services:
         value: "3.11.0"
       - key: SECRET_KEY
         generateValue: true
-    disk:
-      name: data
-      mountPath: /opt/render/project/data
-      sizeGB: 1
