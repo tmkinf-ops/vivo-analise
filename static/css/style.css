@@ -8,12 +8,12 @@
 :root {
   --sidebar-w: 260px;
   --topbar-h: 60px;
-  --sidebar-bg: #0f172a;
-  --sidebar-hover: #1e293b;
-  --sidebar-active: #6B1D3A;
-  --sidebar-text: #94a3b8;
-  --sidebar-text-active: #f1f5f9;
-  --sidebar-border: #1e293b;
+  --sidebar-bg: #4a1028;
+  --sidebar-hover: #5c1633;
+  --sidebar-active: #7a2248;
+  --sidebar-text: #d4a0b3;
+  --sidebar-text-active: #f9e8ef;
+  --sidebar-border: #5c1633;
 
   --bg: #f1f5f9;
   --card: #ffffff;
