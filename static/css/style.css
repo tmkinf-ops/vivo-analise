@@ -1,5 +1,5 @@
-﻿/* ============================================================
-   AUDITORIA TELECOM â€” Design System
+/* ============================================================
+   AUDITORIA TELECOM — Design System
    ============================================================ */
 
 /* --------------------------------------------------
@@ -371,7 +371,7 @@ img { max-width: 100%; }
 }
 
 .metric-blue   { background: var(--info-bg);    color: var(--info); }
-.metric-purple { background: #f5f3ff;            color: #7c3aed; }
+.metric-purple { background: #f9e8ef;            color: #6B1D3A; }
 .metric-indigo { background: var(--primary-light); color: var(--primary); }
 .metric-green  { background: var(--success-bg);  color: var(--success); }
 .metric-red    { background: var(--danger-bg);   color: var(--danger); }
@@ -1619,7 +1619,7 @@ img { max-width: 100%; }
 .result-stat span { font-size: 11px; color: var(--text-muted); }
 
 /* --------------------------------------------------
-   CompetÃªncia tag
+   Competência tag
    -------------------------------------------------- */
 .comp-tag {
   display: inline-block;
@@ -1716,7 +1716,7 @@ img { max-width: 100%; }
 }
 
 /* ============================================================
-   FATURA PDF â†’ XLS
+   FATURA PDF → XLS
    ============================================================ */
 .fatura-xls-card {
   background: var(--surface);
@@ -1737,8 +1737,8 @@ img { max-width: 100%; }
 }
 .fatura-xls-card .drop-zone:hover,
 .fatura-xls-card .drop-zone.drag-over {
-  background: #f3e8ff;
-  border-color: #9b30d9;
+  background: #f9e8ef;
+  border-color: #8B2550;
 }
 .fatura-xls-card .drop-zone .dz-icon {
   font-size: 40px;
@@ -1759,7 +1759,7 @@ img { max-width: 100%; }
 .fatura-preview-header h3 { font-size: 15px; font-weight: 600; margin: 0; }
 .fatura-meta-badges { display: flex; gap: 8px; flex-wrap: wrap; }
 .fatura-meta-badge {
-  background: #f3e8ff;
+  background: #f9e8ef;
   color: #6B1D3A;
   border-radius: 20px;
   padding: 3px 12px;
@@ -1786,12 +1786,12 @@ img { max-width: 100%; }
   border-bottom: 1px solid var(--border);
   vertical-align: middle;
 }
-.fatura-table tr:nth-child(even) td { background: #f9f0ff; }
+.fatura-table tr:nth-child(even) td { background: #fdf2f6; }
 .fatura-table td.right { text-align: right; font-variant-numeric: tabular-nums; }
 .fatura-table tfoot td {
   font-weight: 700;
   border-top: 2px solid #6B1D3A;
-  background: #f3e8ff;
+  background: #f9e8ef;
 }
 
 .fatura-actions {
