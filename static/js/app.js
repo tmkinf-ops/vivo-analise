@@ -259,6 +259,10 @@ const Dashboard = {
           <div class="metric-icon metric-red"><i class="fas fa-circle-xmark"></i></div>
           <div class="metric-info"><span class="metric-value">${d.div_count}</span><span class="metric-label">Divergências</span></div>
         </div>
+        <div class="metric-card">
+          <div class="metric-icon" style="background:#fee2e2;color:#991b1b"><i class="fas fa-phone-slash"></i></div>
+          <div class="metric-info"><span class="metric-value">${d.linhas_inativas || 0}</span><span class="metric-label">Linhas Inativas</span></div>
+        </div>
         <div class="metric-card metric-conformidade">
           <div class="metric-icon metric-${confCls}"><i class="fas fa-gauge-high"></i></div>
           <div class="metric-info">
@@ -276,6 +280,9 @@ const Dashboard = {
         <div class="summary-card"><span class="summary-label">Aproximados</span><span class="summary-value text-warning">${d.aprox_count}</span></div>
         <div class="summary-card"><span class="summary-label">Sem Contrato</span><span class="summary-value text-info">${d.sem_contrato_count}</span></div>
         <div class="summary-card"><span class="summary-label">Sem Fatura</span><span class="summary-value text-muted">${d.sem_fatura_count}</span></div>
+        <div class="summary-card"><span class="summary-label">Bloqueadas</span><span class="summary-value" style="color:#b45309">${d.linhas_bloqueadas || 0}</span></div>
+        <div class="summary-card"><span class="summary-label">Suspensas 120d</span><span class="summary-value text-danger">${d.linhas_suspensas || 0}</span></div>
+        <div class="summary-card"><span class="summary-label">Canceladas</span><span class="summary-value" style="color:#991b1b">${d.linhas_canceladas || 0}</span></div>
       </div>
 
       ${d.fl_total > 0 ? `

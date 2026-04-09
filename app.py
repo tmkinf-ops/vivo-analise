@@ -176,6 +176,14 @@ def dashboard():
     fl_ok = FaturaLinha.query.filter_by(status='ok').count()
     total_planos = PlanoPreco.query.count()
 
+    # Status das linhas (CadastroLinha)
+    linhas_em_uso = CadastroLinha.query.filter_by(status_linha='em_uso').count()
+    linhas_bloqueadas = CadastroLinha.query.filter_by(status_linha='bloqueado').count()
+    linhas_suspensas = CadastroLinha.query.filter_by(status_linha='suspenso_120').count()
+    linhas_canceladas = CadastroLinha.query.filter_by(status_linha='cancelado').count()
+    linhas_inativas = linhas_bloqueadas + linhas_suspensas + linhas_canceladas
+    total_cadastro = CadastroLinha.query.count()
+
     return jsonify({
         'total_contratos': total_contratos,
         'total_linhas_ativas': total_linhas_ativas,
@@ -201,6 +209,13 @@ def dashboard():
         'fl_divergentes': fl_divergentes,
         'fl_ok': fl_ok,
         'total_planos': total_planos,
+        # Status das linhas
+        'linhas_em_uso': linhas_em_uso,
+        'linhas_bloqueadas': linhas_bloqueadas,
+        'linhas_suspensas': linhas_suspensas,
+        'linhas_canceladas': linhas_canceladas,
+        'linhas_inativas': linhas_inativas,
+        'total_cadastro': total_cadastro,
     })
 
 
