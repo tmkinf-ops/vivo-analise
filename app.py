@@ -995,18 +995,22 @@ def importar_fatura():
         planos_dict[p.nome_plano.strip().upper()] = p.valor_contrato
 
     imported = []
-    for item in linhas_raw:
-        numero = re.sub(r'\D', '', str(item.get('numero_vivo', '')))
+    for idx, item in enumerate(linhas_raw, start=1):
+        numero_raw = str(item.get('numero_vivo', '') or '').strip()
+        numero = re.sub(r'\D', '', numero_raw)
         plano_nome = (item.get('plano') or '').strip()
         valor_fat = item.get('valor_total') or item.get('valor_fatura')
-
-        if not numero:
-            continue
 
         try:
             valor_fat = float(valor_fat) if valor_fat is not None else None
         except (ValueError, TypeError):
             valor_fat = None
+
+        if not numero and not numero_raw and (plano_nome or valor_fat is not None):
+            numero = f'MANUAL-{idx:04d}'
+
+        if not numero and not numero_raw:
+            continue
 
         # Busca preço do plano
         plano_upper = plano_nome.upper()

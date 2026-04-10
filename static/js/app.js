@@ -2192,6 +2192,36 @@ const FaturaXls = {
         <div id="planos-table-wrap">${this._planosTable()}</div>
       </div>
 
+      <div class="fatura-xls-card" style="margin-bottom:20px">
+        <h3 style="margin:0 0 12px;font-size:15px;font-weight:600">
+          <i class="fas fa-pen-to-square" style="color:#6B1D3A;margin-right:6px"></i>Lançamento Manual para Comparação
+        </h3>
+        <p style="color:var(--text-secondary);font-size:13px;margin:0 0 12px">
+          Adicione manualmente o plano e o valor da fatura para comparar com o valor de contrato cadastrado.
+        </p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
+          <div style="min-width:170px;flex:1">
+            <label style="font-size:12px;font-weight:500;color:var(--text-secondary)">Número Vivo</label>
+            <input id="fxls-manual-numero" type="text" placeholder="Ex: 11999999999"
+                   style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border);border-radius:6px">
+          </div>
+          <div style="min-width:240px;flex:1.4">
+            <label style="font-size:12px;font-weight:500;color:var(--text-secondary)">Plano</label>
+            <input id="fxls-manual-plano" type="text" list="fxls-planos-list" placeholder="Selecione ou digite o plano"
+                   style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border);border-radius:6px">
+            ${this._planosDataList()}
+          </div>
+          <div style="min-width:160px">
+            <label style="font-size:12px;font-weight:500;color:var(--text-secondary)">Valor da Fatura R$</label>
+            <input id="fxls-manual-valor" type="number" step="0.01" placeholder="0,00"
+                   style="width:100%;padding:7px 10px;font-size:13px;border:1px solid var(--border);border-radius:6px">
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="FaturaXls.addManualRow()" style="height:36px">
+            <i class="fas fa-plus"></i> Adicionar à Comparação
+          </button>
+        </div>
+      </div>
+
       <!-- Upload PDF -->
       <div class="fatura-xls-card">
         <h3 style="margin:0 0 12px;font-size:15px;font-weight:600">
@@ -2211,6 +2241,10 @@ const FaturaXls = {
         </div>
         <div id="fxls-result"></div>
       </div>`;
+
+    if (this.state.rows.length) {
+      this.renderPreview({ ...this.state.meta, linhas: this.state.rows, filename: this.state.filename, raw_text: this.state.rawText });
+    }
   },
 
   async loadPlanos() {
@@ -2239,6 +2273,15 @@ const FaturaXls = {
     </table>`;
   },
 
+  _planosDataList() {
+    return `<datalist id="fxls-planos-list">${this.planos.map(p => `<option value="${U.esc(p.nome_plano)}"></option>`).join('')}</datalist>`;
+  },
+
+  _refreshPreview() {
+    if (!this.state.rows.length) return;
+    this.renderPreview({ ...this.state.meta, linhas: this.state.rows, filename: this.state.filename, raw_text: this.state.rawText });
+  },
+
   async addPlano() {
     const nomeEl  = document.getElementById('plano-nome');
     const valorEl = document.getElementById('plano-valor');
@@ -2251,8 +2294,37 @@ const FaturaXls = {
       nomeEl.value = ''; valorEl.value = '';
       await this.loadPlanos();
       document.getElementById('planos-table-wrap').innerHTML = this._planosTable();
+      this._refreshPreview();
       U.toast('Plano salvo com sucesso!');
     } catch(e) { U.toast(e.message, 'error'); }
+  },
+
+  addManualRow() {
+    const numeroEl = document.getElementById('fxls-manual-numero');
+    const planoEl = document.getElementById('fxls-manual-plano');
+    const valorEl = document.getElementById('fxls-manual-valor');
+
+    const numero = (numeroEl?.value || '').trim();
+    const plano = (planoEl?.value || '').trim();
+    const valor = parseFloat(valorEl?.value);
+
+    if (!plano) { U.toast('Informe o plano para comparar.', 'error'); return; }
+    if (isNaN(valor) || valor < 0) { U.toast('Informe um valor de fatura válido.', 'error'); return; }
+
+    this.state.rows.push({
+      numero_vivo: numero,
+      plano,
+      valor_total: valor,
+      valor_fatura: valor,
+    });
+    this.state.filename = this.state.filename || 'lancamento_manual';
+
+    if (numeroEl) numeroEl.value = '';
+    if (planoEl) planoEl.value = '';
+    if (valorEl) valorEl.value = '';
+
+    this._refreshPreview();
+    U.toast('Linha adicionada para comparação.');
   },
 
   editPlano(id, nome, valor) {
@@ -2284,6 +2356,7 @@ const FaturaXls = {
       U.closeModal();
       await this.loadPlanos();
       document.getElementById('planos-table-wrap').innerHTML = this._planosTable();
+      this._refreshPreview();
       U.toast('Plano atualizado!');
     } catch(e) { U.toast(e.message, 'error'); }
   },
@@ -2294,6 +2367,7 @@ const FaturaXls = {
       await API.del(`/api/planos/${id}`);
       await this.loadPlanos();
       document.getElementById('planos-table-wrap').innerHTML = this._planosTable();
+      this._refreshPreview();
       U.toast('Plano excluído.');
     } catch(e) { U.toast(e.message, 'error'); }
   },
