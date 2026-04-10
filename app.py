@@ -23,9 +23,12 @@ IS_RENDER = os.environ.get('RENDER', False)
 
 # Na Vercel, o filesystem é read-only exceto /tmp
 # No Render, usamos disco persistente montado em /opt/render/project/data
-if IS_VERCEL or IS_RENDER:
+if IS_VERCEL:
     DB_DIR = '/tmp'
     UPLOAD_DIR = '/tmp/uploads'
+elif IS_RENDER:
+    DB_DIR = os.environ.get('RENDER_DISK_MOUNT_PATH', '/opt/render/project/data')
+    UPLOAD_DIR = os.path.join(DB_DIR, 'uploads')
 else:
     DB_DIR = BASE_DIR
     UPLOAD_DIR = os.path.join(BASE_DIR, 'uploads')
@@ -1114,33 +1117,36 @@ def reset_database():
     if confirmacao != 'CONFIRMAR':
         return jsonify({'error': 'Envie {"confirmacao":"CONFIRMAR"} para zerar o banco.'}), 400
 
-    # Limpar todas as tabelas em ordem segura (FKs)
-    Comparacao.query.delete()
-    FaturaLinha.query.delete()
-    Conta.query.delete()
-    Contrato.query.delete()
-    Importacao.query.delete()
-    PlanoPreco.query.delete()
-    CadastroLinha.query.delete()
-    CoopernacVoz.query.delete()
-    CoopernacDados.query.delete()
-    CoopernacResumo.query.delete()
-    Configuracao.query.delete()
-    db.session.commit()
+    try:
+        # Limpar todas as tabelas em ordem segura (FKs)
+        Comparacao.query.delete()
+        FaturaLinha.query.delete()
+        Conta.query.delete()
+        Contrato.query.delete()
+        Importacao.query.delete()
+        PlanoPreco.query.delete()
+        CadastroLinha.query.delete()
+        CoopernacVoz.query.delete()
+        CoopernacDados.query.delete()
+        CoopernacResumo.query.delete()
+        Configuracao.query.delete()
 
-    # Recriar configurações padrão
-    defaults = [
-        ('tolerancia_tipo', 'percentual', 'Tipo de tolerância: fixo (R$) ou percentual (%)'),
-        ('tolerancia_valor', '5.0', 'Valor da tolerância'),
-        ('apenas_recorrentes', 'false', 'Considerar apenas cobranças recorrentes'),
-        ('ignorar_extras', 'false', 'Ignorar taxas extras e multas'),
-        ('empresa_nome', 'Auditoria Telecom', 'Nome da empresa'),
-    ]
-    for chave, valor, descricao in defaults:
-        db.session.add(Configuracao(chave=chave, valor=valor, descricao=descricao))
-    db.session.commit()
+        # Recriar configurações padrão
+        defaults = [
+            ('tolerancia_tipo', 'percentual', 'Tipo de tolerância: fixo (R$) ou percentual (%)'),
+            ('tolerancia_valor', '5.0', 'Valor da tolerância'),
+            ('apenas_recorrentes', 'false', 'Considerar apenas cobranças recorrentes'),
+            ('ignorar_extras', 'false', 'Ignorar taxas extras e multas'),
+            ('empresa_nome', 'Auditoria Telecom', 'Nome da empresa'),
+        ]
+        for chave, valor, descricao in defaults:
+            db.session.add(Configuracao(chave=chave, valor=valor, descricao=descricao))
 
-    return jsonify({'ok': True, 'message': 'Banco de dados zerado com sucesso.'})
+        db.session.commit()
+        return jsonify({'ok': True, 'message': 'Banco de dados zerado com sucesso.'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Falha ao zerar banco: {str(e)}'}), 500
 
 
 # ============================================================
