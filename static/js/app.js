@@ -1005,7 +1005,7 @@ const UploadContas = {
       operadora:      row.querySelector('[name="operadora"]')?.value.trim()   || '',
       numero_fatura:  row.querySelector('[name="numero_fatura"]')?.value.trim() || '',
       arquivo_pdf_origem: S.uploadConta.filename,
-    })).filter(r => r.linha_telefone);
+    })).filter(r => r.linha_telefone && r.valor_fatura !== '');
   },
 
   async save() {

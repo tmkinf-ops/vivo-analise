@@ -47,6 +47,32 @@ def allowed_file(filename: str) -> bool:
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+def parse_nullable_float(value):
+    """Converte valor numérico (pt-BR/en-US) para float; retorna None quando vazio/inválido."""
+    if value is None:
+        return None
+    if isinstance(value, (int, float)):
+        return float(value)
+
+    txt = str(value).strip()
+    if not txt:
+        return None
+
+    txt = re.sub(r'\s+', '', txt)
+    txt = txt.replace('R$', '')
+
+    # Formato brasileiro com milhar e decimal: 1.234,56
+    if ',' in txt and '.' in txt:
+        txt = txt.replace('.', '').replace(',', '.')
+    else:
+        txt = txt.replace(',', '.')
+
+    try:
+        return float(txt)
+    except (TypeError, ValueError):
+        return None
+
+
 def init_db():
     """Inicializa banco de dados e configurações padrão."""
     with app.app_context():
@@ -456,14 +482,20 @@ def save_contas_lote():
 
     saved, errors = 0, []
     competencia_ref = None
-    for row in data['contas']:
-        if not row.get('linha_telefone') or row.get('valor_fatura') is None:
-            errors.append(f"Dados incompletos: {row.get('linha_telefone', '?')}")
+    for idx, row in enumerate(data['contas'], start=1):
+        linha_raw = str(row.get('linha_telefone') or '').strip()
+        valor = parse_nullable_float(row.get('valor_fatura'))
+        if not linha_raw or valor is None:
+            errors.append(f"Linha {idx}: dados incompletos ou valor_fatura inválido")
             continue
         try:
-            valor = float(str(row['valor_fatura']).replace(',', '.'))
+            linha_digits = re.sub(r'\D', '', linha_raw)
+            if not linha_digits:
+                errors.append(f"Linha {idx}: telefone inválido")
+                continue
+
             c = Conta(
-                linha_telefone=re.sub(r'\D', '', str(row['linha_telefone'])),
+                linha_telefone=linha_digits,
                 valor_fatura=valor,
                 plano=row.get('plano') or None,
                 competencia=row.get('competencia') or None,
@@ -477,7 +509,7 @@ def save_contas_lote():
             if row.get('competencia') and not competencia_ref:
                 competencia_ref = row['competencia']
         except Exception as e:
-            errors.append(str(e))
+            errors.append(f"Linha {idx}: {str(e)}")
 
     db.session.commit()
 
